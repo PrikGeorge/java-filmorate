@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.service.user.UserServiceImpl;
-import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.service.user.UserService;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.utils.GenerateIdentifier;
 
 import java.util.Comparator;
@@ -25,11 +25,11 @@ import java.util.stream.Collectors;
 public class FilmServiceImpl implements FilmService {
 
     public static final Comparator<Film> COMPARATOR_LIKES = (curFilm, nextFilm) -> nextFilm.getLikes().size() - curFilm.getLikes().size();
-    private final InMemoryFilmStorage storage;
-    private final UserServiceImpl userService;
+    private final FilmStorage storage;
+    private final UserService userService;
 
     @Autowired
-    public FilmServiceImpl(InMemoryFilmStorage storage, UserServiceImpl userService) {
+    public FilmServiceImpl(FilmStorage storage, UserService userService) {
         this.storage = storage;
         this.userService = userService;
     }
