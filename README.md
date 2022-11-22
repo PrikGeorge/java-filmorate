@@ -4,9 +4,9 @@
   SELECT * FROM films;
   
 Список общих друзей:
-  SELECT from_id FROM friends
-  WHERE to_id = 1
-  AND from_id in (
-    SELECT from_id FROM friends
-    WHERE to_id = 2
+  SELECT user_id FROM user_friends
+  WHERE friend_id = 1
+  AND friend_id in (
+    SELECT friend_id FROM friends
+    WHERE user_id = 2
   )
