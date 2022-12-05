@@ -1,20 +1,27 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.NonFinal;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * @project java-filmorate
+ * @auther George Prikashchenkov on 31.10.2022
+ */
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
     @NonFinal
     @Setter
-    private long id;
+    private Long id;
 
     @Email
     @NotBlank
@@ -32,6 +39,9 @@ public class User {
     private String name;
 
     @Past
-    LocalDate birthday;
+    private LocalDate birthday;
 
+    @NonFinal
+    @Setter
+    private Set<Long> friends = new HashSet<>();
 }

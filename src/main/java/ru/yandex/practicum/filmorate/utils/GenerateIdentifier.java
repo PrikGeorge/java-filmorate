@@ -3,20 +3,25 @@ package ru.yandex.practicum.filmorate.utils;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @project java-filmorate
+ * @auther George Prikashchenkov on 31.10.2022
+ */
+
 public enum GenerateIdentifier {
 
     INSTANCE;
 
-    private final Map<Class<?>, Integer> identifier = new HashMap<>();
+    private final Map<Class<?>, Long> identifier = new HashMap<>();
 
-    public int generateId(Class<?> clazz) {
+    public long generateId(Class<?> clazz) {
         if (identifier.containsKey(clazz)) {
-            int id = identifier.get(clazz);
+            long id = identifier.get(clazz);
             identifier.put(clazz, ++id);
             return id;
 
         } else {
-            identifier.put(clazz, 1);
+            identifier.put(clazz, (long) 1);
             return 1;
         }
     }

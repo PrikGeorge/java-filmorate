@@ -4,6 +4,11 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.*;
 
+/**
+ * @project java-filmorate
+ * @auther George Prikashchenkov on 31.10.2022
+ */
+
 @Documented
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)

@@ -5,6 +5,10 @@ import javax.validation.ConstraintValidatorContext;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * @project java-filmorate
+ * @auther George Prikashchenkov on 31.10.2022
+ */
 public class ReleaseDateValidationImpl implements ConstraintValidator<ReleaseDateValidation, LocalDate> {
 
     private String dateStart;
