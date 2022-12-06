@@ -11,13 +11,17 @@ import java.util.List;
  */
 
 @RequestMapping("/default")
-public interface Operations<T> {
+public interface Controllers<T> {
 
     @PostMapping
-    T create(@Valid @RequestBody T obj);
+    default T create(@Valid @RequestBody T obj) {
+        throw new UnsupportedOperationException("Метод создания объекта не реализован.");
+    }
 
     @PutMapping
-    T update(@Valid @RequestBody T obj);
+    default T update(@Valid @RequestBody T obj) {
+        throw new UnsupportedOperationException("Метод обновления объекта не реализован.");
+    }
 
     @GetMapping
     List<T> getAll();

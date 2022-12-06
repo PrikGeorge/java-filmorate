@@ -5,6 +5,7 @@ import lombok.experimental.NonFinal;
 import ru.yandex.practicum.filmorate.annotation.ReleaseDateValidation;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
@@ -24,23 +25,24 @@ public class Film {
 
     @NonFinal
     @Setter
+    Set<Genre> genres = new HashSet<>();
+    @NonFinal
+    @Setter
     private Long id;
-
     @NotBlank
     @Size(max = 50)
     private String name;
-
     @NotBlank
     @Size(max = 200)
     private String description;
-
     @ReleaseDateValidation(message = "Неверная дата создания фильма", dateStart = "1895.12.28")
     private LocalDate releaseDate;
-
     @Positive
     private int duration;
-
     @NonFinal
     @Setter
     private Set<Long> likes = new HashSet<>();
+    @NotNull
+    private Mpa mpa;
+
 }

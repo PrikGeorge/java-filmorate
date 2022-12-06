@@ -38,6 +38,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler({UnsupportedOperationException.class})
+    protected ResponseEntity<Object> handleUnsupportedOperationExceptionEx(UnsupportedOperationException ex,
+                                                                           WebRequest request) {
+        ApiError error = new ApiError("Метод не реализован", ex.getMessage());
+        logger.debug(ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders header, HttpStatus status,
