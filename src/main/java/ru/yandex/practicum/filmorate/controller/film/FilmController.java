@@ -14,12 +14,32 @@ import java.util.List;
 @RequestMapping("/films")
 public interface FilmController extends Controllers<Film> {
 
+    /**
+     * Добавление лайка пользователя к фильму
+     *
+     * @param id
+     * @param userId
+     * @return boolean
+     */
     @PutMapping("/{id}/like/{userId}")
     boolean addLike(@PathVariable(value = "id") Long id, @PathVariable(value = "userId") Long userId);
 
+    /**
+     * Удаление лайка пользователя у фильма
+     *
+     * @param id
+     * @param userId
+     * @return boolean
+     */
     @DeleteMapping("/{id}/like/{userId}")
     boolean removeLike(@PathVariable(value = "id") Long id, @PathVariable(value = "userId") Long userId);
 
+    /**
+     * Получение списка популярных фильмов
+     *
+     * @param count количество фильмов, которое нужно вернуть
+     * @return List
+     */
     @GetMapping("/popular")
     List<Film> getPopular(@RequestParam(required = false) Integer count);
 

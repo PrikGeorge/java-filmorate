@@ -7,6 +7,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.mapper.FilmMapper;
 import ru.yandex.practicum.filmorate.mapper.GenreMapper;
+import ru.yandex.practicum.filmorate.mapper.MapperConstants;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 
@@ -55,7 +56,7 @@ public class FilmDbStorage implements FilmStorage {
         Film finalFilm = film;
 
         jdbcTemplate.update(connection -> {
-            PreparedStatement stmt = connection.prepareStatement(sqlQuery, new String[]{"id"});
+            PreparedStatement stmt = connection.prepareStatement(sqlQuery, new String[]{MapperConstants.ID.name()});
             stmt.setString(1, finalFilm.getName());
             stmt.setString(2, finalFilm.getDescription());
             final LocalDate releaseDate = finalFilm.getReleaseDate();

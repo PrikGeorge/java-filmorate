@@ -25,23 +25,30 @@ public class Film {
 
     @NonFinal
     @Setter
-    Set<Genre> genres = new HashSet<>();
-    @NonFinal
-    @Setter
     private Long id;
+
     @NotBlank
     @Size(max = 50)
     private String name;
+
     @NotBlank
     @Size(max = 200)
     private String description;
+
     @ReleaseDateValidation(message = "Неверная дата создания фильма", dateStart = "1895.12.28")
     private LocalDate releaseDate;
+
     @Positive
     private int duration;
+
     @NonFinal
     @Setter
     private Set<Long> likes = new HashSet<>();
+
+    @NonFinal
+    @Setter
+    private Set<Genre> genres = new HashSet<>();
+
     @NotNull
     private Mpa mpa;
 

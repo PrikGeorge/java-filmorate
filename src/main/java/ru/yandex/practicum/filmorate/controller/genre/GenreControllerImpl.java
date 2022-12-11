@@ -21,22 +21,11 @@ public class GenreControllerImpl implements GenreController {
         this.service = service;
     }
 
-    /**
-     * Поиск всех жанров
-     *
-     * @return List
-     */
     @Override
     public List<Genre> getAll() {
         return service.getAll();
     }
 
-    /**
-     * Получить жанр по идентификатору
-     *
-     * @param id
-     * @return Genre
-     */
     @Override
     public Genre findById(@PathVariable Long id) {
         return service.findById(id);

@@ -26,79 +26,36 @@ public class FilmControllerImpl implements FilmController {
         this.service = service;
     }
 
-    /**
-     * Создание фильма
-     *
-     * @param film
-     * @return Film
-     */
     @Override
     public Film create(@Valid @RequestBody Film film) {
         return service.create(film);
     }
 
-    /**
-     * Обновление объекта
-     *
-     * @param film
-     * @return Film
-     */
     @Override
     public Film update(@Valid @RequestBody Film film) {
         return service.update(film);
     }
 
-    /**
-     * Получение списка всех фильмов
-     *
-     * @return List
-     */
     @Override
     public List<Film> getAll() {
         return service.getAll();
     }
 
-    /**
-     * Получение фильма по id
-     *
-     * @param id
-     * @return Film
-     */
     @Override
     public Film findById(@PathVariable(value = "id") Long id) {
         return service.findById(id);
     }
 
-    /**
-     * Добавление лайка пользователя к фильму
-     *
-     * @param id
-     * @param userId
-     * @return boolean
-     */
     @Override
     public boolean addLike(@PathVariable(value = "id") Long id, @PathVariable(value = "userId") Long userId) {
         return service.addLike(id, userId);
     }
 
-    /**
-     * Удаление лайка пользователя у фильма
-     *
-     * @param id
-     * @param userId
-     * @return boolean
-     */
     @Override
     public boolean removeLike(@PathVariable(value = "id") Long id, @PathVariable(value = "userId") Long userId) {
         return service.removeLike(id, userId);
     }
 
-    /**
-     * Получение списка популярных фильмов
-     *
-     * @param count количество фильмов, которое нужно вернуть
-     * @return List
-     */
     @Override
     public List<Film> getPopular(@RequestParam(required = false) Integer count) {
         return service.getMostPopularFilms(count);
