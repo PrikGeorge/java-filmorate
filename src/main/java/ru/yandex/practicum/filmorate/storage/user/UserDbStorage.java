@@ -45,7 +45,7 @@ public class UserDbStorage implements UserStorage {
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement stmt = connection.prepareStatement(sqlQuery, new String[]{MapperConstants.ID.name()});
+            PreparedStatement stmt = connection.prepareStatement(sqlQuery, new String[]{MapperConstants.ID.lowerCaseName()});
             stmt.setString(1, user.getName());
             stmt.setString(2, user.getLogin());
             stmt.setString(3, user.getEmail());

@@ -1,30 +1,55 @@
 package ru.yandex.practicum.filmorate.mapper;
 
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @project java-filmorate
  * @auther George Prikashchenkov on 05.12.2022
  */
-public class FilmMapper implements RowMapper<Film> {
-
+public class FilmMapper implements ResultSetExtractor<List<Film>> {
     @Override
-    public Film mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return Film.builder()
-                .id(rs.getLong(MapperConstants.ID.name()))
-                .name(rs.getString(MapperConstants.NAME.name()))
-                .description(rs.getString(MapperConstants.DESCRIPTION.name()))
-                .releaseDate(rs.getDate(MapperConstants.RELEASE_DATE.name()).toLocalDate())
-                .duration(rs.getInt(MapperConstants.DURATION.name()))
-                .mpa(Mpa.builder()
-                        .id(rs.getLong(MapperConstants.MPA_ID.name()))
-                        .name(rs.getString(MapperConstants.MPA_NAME.name()))
-                        .build())
-                .build();
+    public List<Film> extractData(ResultSet rs) throws SQLException, DataAccessException {
+        Map<Long, Film> films = new HashMap<>();
+
+        while (rs.next()) {
+            long id = rs.getLong(MapperConstants.ID.lowerCaseName());
+
+            films.putIfAbsent(id, Film.builder()
+                    .id(rs.getLong(MapperConstants.ID.lowerCaseName()))
+                    .name(rs.getString(MapperConstants.NAME.lowerCaseName()))
+                    .description(rs.getString(MapperConstants.DESCRIPTION.lowerCaseName()))
+                    .releaseDate(rs.getDate(MapperConstants.RELEASE_DATE.lowerCaseName()).toLocalDate())
+                    .duration(rs.getInt(MapperConstants.DURATION.lowerCaseName()))
+                    .mpa(Mpa.builder()
+                            .id(rs.getLong(MapperConstants.MPA_ID.lowerCaseName()))
+                            .name(rs.getString(MapperConstants.MPA_NAME.lowerCaseName()))
+                            .build())
+                    .genres(new ArrayList<>())
+                    .build()
+
+            );
+
+            Genre genre = Genre.builder()
+                    .id(rs.getLong(MapperConstants.GENRE_ID.lowerCaseName()))
+                    .name(rs.getString(MapperConstants.GENRE_NAME.lowerCaseName()))
+                    .build();
+
+            if (genre.getId() != 0) {
+                films.get(id).getGenres().add(genre);
+            }
+        }
+
+        return new ArrayList<>(films.values());
     }
 }

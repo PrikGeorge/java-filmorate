@@ -16,12 +16,12 @@ public class UserMapper implements RowMapper<User> {
     @Override
     public User mapRow(ResultSet rs, int rowNum) throws SQLException {
         return User.builder()
-                .id(rs.getLong(MapperConstants.ID.name()))
-                .email(rs.getString(MapperConstants.EMAIL.name()))
-                .login(rs.getString(MapperConstants.LOGIN.name()))
-                .name(rs.getString(MapperConstants.NAME.name()))
-                .birthday(Objects.nonNull(rs.getDate(MapperConstants.BIRTHDAY.name())) ?
-                        rs.getDate(MapperConstants.BIRTHDAY.name()).toLocalDate() : null)
+                .id(rs.getLong(MapperConstants.ID.lowerCaseName()))
+                .email(rs.getString(MapperConstants.EMAIL.lowerCaseName()))
+                .login(rs.getString(MapperConstants.LOGIN.lowerCaseName()))
+                .name(rs.getString(MapperConstants.NAME.lowerCaseName()))
+                .birthday(Objects.nonNull(rs.getDate(MapperConstants.BIRTHDAY.lowerCaseName())) ?
+                        rs.getDate(MapperConstants.BIRTHDAY.lowerCaseName()).toLocalDate() : null)
                 .build();
     }
 }
