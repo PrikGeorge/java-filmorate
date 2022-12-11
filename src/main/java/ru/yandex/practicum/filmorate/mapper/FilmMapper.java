@@ -40,13 +40,15 @@ public class FilmMapper implements ResultSetExtractor<List<Film>> {
 
             );
 
-            Genre genre = Genre.builder()
-                    .id(rs.getLong(MapperConstants.GENRE_ID.lowerCaseName()))
-                    .name(rs.getString(MapperConstants.GENRE_NAME.lowerCaseName()))
-                    .build();
+            long genreId = rs.getLong(MapperConstants.GENRE_ID.lowerCaseName());
 
-            if (genre.getId() != 0) {
-                films.get(id).getGenres().add(genre);
+            if (genreId != 0) {
+                films.get(id).getGenres().add(
+                        Genre.builder()
+                        .id(genreId)
+                        .name(rs.getString(MapperConstants.GENRE_NAME.lowerCaseName()))
+                        .build()
+                );
             }
         }
 
