@@ -61,4 +61,9 @@ public class FilmControllerImpl implements FilmController {
         return service.getMostPopularFilms(count);
     }
 
+    @Override
+    public boolean delete(Long id) {
+        return service.delete(id);
+    }
+
 }

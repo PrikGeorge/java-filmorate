@@ -53,4 +53,12 @@ public interface UserController extends Controllers<User> {
     @GetMapping("/{id}/friends/common/{otherId}")
     List<User> getMutualFriends(@PathVariable(value = "id") Long id, @PathVariable(value = "otherId") Long otherId);
 
+    /**
+     * Удаление пользователя
+     *
+     * @param id
+     * @return boolean
+     */
+    @DeleteMapping("/{userId}")
+    boolean delete(@PathVariable(value = "userId") Long id);
 }

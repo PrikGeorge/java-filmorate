@@ -76,4 +76,12 @@ public interface UserService {
      * @return User
      */
     User create(User user);
+
+    /**
+     * Удаление пользователя
+     *
+     * @param id
+     * @return boolean
+     */
+    boolean delete(Long id);
 }

@@ -77,8 +77,15 @@ public class FilmServiceImpl implements FilmService {
         if (Objects.nonNull(film.getId())) {
             validateFilmId(film.getId());
         }
-
         return storage.create(film);
+    }
+
+    @Override
+    public boolean delete(@NonNull Long id) {
+        if (!storage.deleteFilm(id)) {
+            throw new EntityNotFoundException("Фильм с id=" + id + " не найден");
+        }
+        return storage.deleteFilm(id);
     }
 
     private Film validateFilmId(Long id) {

@@ -67,4 +67,12 @@ public interface FilmService {
      * @return Film
      */
     Film create(Film film);
+
+    /**
+     * Удаление фильма
+     *
+     * @param id
+     * @return boolean
+     */
+    boolean delete(Long id);
 }

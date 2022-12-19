@@ -122,6 +122,12 @@ public class FilmDbStorage implements FilmStorage {
         return Optional.empty();
     }
 
+    @Override
+    public boolean deleteFilm(@NonNull Long id) {
+        String sqlQuery = "DELETE FROM films WHERE id = ?";
+        return jdbcTemplate.update(sqlQuery, id) != 0;
+    }
+
     private Optional<Film> updateFilmGenres(Film film) {
         jdbcTemplate.update("DELETE FROM films_genres WHERE film_id = ?", film.getId());
 

@@ -37,4 +37,12 @@ public interface FilmStorage extends Storage<Film> {
      * @return boolean
      */
     boolean removeLike(Long filmId, Long userId);
+
+    /**
+     * Удаление фильма
+     *
+     * @param filmId
+     * @return boolean
+     */
+    boolean deleteFilm(Long filmId);
 }
