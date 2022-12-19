@@ -8,12 +8,10 @@ import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.user.UserService;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
-import ru.yandex.practicum.filmorate.utils.GenerateIdentifier;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * @project java-filmorate
@@ -36,29 +34,23 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public boolean addLike(Long filmId, Long userId) {
-        Film film = validateFilmId(filmId);
+        validateFilmId(filmId);
         userService.findById(userId);
 
-        return film.getLikes().add(userId);
+        return storage.addLike(filmId, userId);
     }
 
     @Override
     public boolean removeLike(Long filmId, Long userId) {
-        Film film = validateFilmId(filmId);
-        if (film.getLikes().size() == 0) {
-            log.error("Ошибка при удалении лайка у фильма.");
-            throw new EntityNotFoundException("У данного фильма нет лайков.");
-        }
+        validateFilmId(filmId);
+        userService.findById(userId);
 
-        return film.getLikes().remove(userId);
+        return storage.removeLike(filmId, userId);
     }
 
     @Override
-    public List<Film> getMostPopular(Integer limit) {
-        List<Film> films = storage.getAll();
-        films.sort(COMPARATOR_LIKES);
-
-        return films.stream().limit(Objects.requireNonNullElse(limit, 10)).collect(Collectors.toList());
+    public List<Film> getMostPopularFilms(Integer limit) {
+        return storage.getMostPopularFilms(Objects.requireNonNullElse(limit, 10));
     }
 
     @Override
@@ -74,7 +66,10 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public Film update(@NonNull Film film) {
         validateFilmId(film.getId());
-        return storage.update(film);
+        return storage.update(film).orElseThrow(() -> {
+            log.info("Ошибка при обновлении фильма.");
+            throw new EntityNotFoundException("Ошибка при обновлении фильма с id=" + film.getId());
+        });
     }
 
     @Override
@@ -83,13 +78,12 @@ public class FilmServiceImpl implements FilmService {
             validateFilmId(film.getId());
         }
 
-        film.setId(GenerateIdentifier.INSTANCE.generateId(Film.class));
         return storage.create(film);
     }
 
     private Film validateFilmId(Long id) {
         return storage.findById(id).orElseThrow(() -> {
-            log.error("Ошибка при валидации фильма.");
+            log.info("Ошибка при валидации фильма.");
             throw new EntityNotFoundException("Фильм с id=" + id + " не найден");
         });
     }

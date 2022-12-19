@@ -23,16 +23,19 @@ public interface Storage<T> {
      * @param obj
      * @return созданный объект
      */
-    T create(T obj);
+    default T create(T obj) {
+        throw new UnsupportedOperationException("Метод создания объекта не реализован.");
+    }
 
     /**
      * Обновление объекта
      *
      * @param obj
-     * @return обнавленный объект
+     * @return обнвленный объект
      */
-    T update(T obj);
-
+    default Optional<T> update(T obj) {
+        throw new UnsupportedOperationException("Метод обновления объекта не реализован.");
+    }
 
     /**
      * Получение объекта по id

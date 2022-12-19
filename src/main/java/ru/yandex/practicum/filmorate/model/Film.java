@@ -5,10 +5,13 @@ import lombok.experimental.NonFinal;
 import ru.yandex.practicum.filmorate.annotation.ReleaseDateValidation;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -43,4 +46,12 @@ public class Film {
     @NonFinal
     @Setter
     private Set<Long> likes = new HashSet<>();
+
+    @NonFinal
+    @Setter
+    private List<Genre> genres = new ArrayList<>();
+
+    @NotNull
+    private Mpa mpa;
+
 }

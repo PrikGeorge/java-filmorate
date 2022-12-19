@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.ConstraintViolation;
@@ -15,7 +16,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ValidationTests {
+class ValidationTests {
 
     private Validator validator;
 
@@ -84,6 +85,7 @@ public class ValidationTests {
                 .description("adipisicing")
                 .releaseDate(LocalDate.of(1967,3,25))
                 .duration(100)
+                .mpa(Mpa.builder().id(1L).name("G").build())
                 .build();
 
         Set<ConstraintViolation<Film>> violations = validator.validate(film);

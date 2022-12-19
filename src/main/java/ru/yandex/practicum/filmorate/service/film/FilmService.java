@@ -35,7 +35,7 @@ public interface FilmService {
      * @param limit количество фильмов, которое нужно вернуть
      * @return List
      */
-    List<Film> getMostPopular(Integer limit);
+    List<Film> getMostPopularFilms(Integer limit);
 
     /**
      * Поиск фильма по id
