@@ -95,9 +95,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean delete(@NonNull Long id) {
+    public boolean remove(@NonNull Long id) {
         validateUserId(id);
-        return storage.deleteUser(id);
+        return storage.remove(id);
     }
 
     private User validateUserId(Long id) {

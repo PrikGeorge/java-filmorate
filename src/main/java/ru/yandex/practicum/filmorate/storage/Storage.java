@@ -38,6 +38,16 @@ public interface Storage<T> {
     }
 
     /**
+     * Удаление объекта
+     *
+     * @param id
+     * @return boolean
+     */
+    default boolean remove(Long id){
+        throw new UnsupportedOperationException("Метод обновления объекта не реализован.");
+    }
+
+    /**
      * Получение объекта по id
      *
      * @param id

@@ -42,14 +42,4 @@ public interface FilmController extends Controllers<Film> {
      */
     @GetMapping("/popular")
     List<Film> getPopular(@RequestParam(required = false) Integer count);
-
-    /**
-     * Удаление фильма
-     *
-     * @param id
-     * @return boolean
-     */
-    @DeleteMapping("/{filmId}")
-    boolean delete(@PathVariable(value = "filmId") Long id);
-
 }

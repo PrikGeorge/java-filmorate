@@ -83,5 +83,5 @@ public interface UserService {
      * @param id
      * @return boolean
      */
-    boolean delete(Long id);
+    boolean remove(Long id);
 }

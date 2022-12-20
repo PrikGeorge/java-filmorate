@@ -62,8 +62,8 @@ public class FilmControllerImpl implements FilmController {
     }
 
     @Override
-    public boolean delete(Long id) {
-        return service.delete(id);
+    public boolean remove(Long id) {
+        return service.remove(id);
     }
 
 }

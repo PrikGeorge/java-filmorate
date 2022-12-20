@@ -81,11 +81,9 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public boolean delete(@NonNull Long id) {
-        if (!storage.deleteFilm(id)) {
-            throw new EntityNotFoundException("Фильм с id=" + id + " не найден");
-        }
-        return storage.deleteFilm(id);
+    public boolean remove(@NonNull Long id) {
+        validateFilmId(id);
+        return storage.remove(id);
     }
 
     private Film validateFilmId(Long id) {

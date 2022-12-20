@@ -47,11 +47,5 @@ public interface UserStorage extends Storage<User> {
      */
     List<User> getFriends(Long id);
 
-    /**
-     * Удаление пользователя
-     *
-     * @param userId
-     * @return boolean
-     */
-    boolean deleteUser(Long userId);
+
 }

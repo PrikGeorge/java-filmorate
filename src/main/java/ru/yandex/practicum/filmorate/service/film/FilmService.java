@@ -74,5 +74,5 @@ public interface FilmService {
      * @param id
      * @return boolean
      */
-    boolean delete(Long id);
+    boolean remove(Long id);
 }

@@ -123,7 +123,7 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public boolean deleteUser(@NonNull Long id) {
+    public boolean remove(@NonNull Long id) {
         String sqlQuery = "DELETE FROM users WHERE id = ?";
         return jdbcTemplate.update(sqlQuery, id) != 0;
     }
