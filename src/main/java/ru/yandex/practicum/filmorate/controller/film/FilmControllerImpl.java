@@ -1,10 +1,7 @@
 package ru.yandex.practicum.filmorate.controller.film;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.film.FilmService;
 
@@ -59,6 +56,11 @@ public class FilmControllerImpl implements FilmController {
     @Override
     public List<Film> getPopular(@RequestParam(required = false) Integer count) {
         return service.getMostPopularFilms(count);
+    }
+
+    @Override
+    public List<Film> getCommonFilms(@RequestParam(value = "userId") Long userId, @RequestParam(value = "friendId") Long friendId) {
+        return service.getCommonFilms(userId, friendId);
     }
 
 }

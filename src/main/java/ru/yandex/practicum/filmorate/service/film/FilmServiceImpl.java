@@ -81,6 +81,13 @@ public class FilmServiceImpl implements FilmService {
         return storage.create(film);
     }
 
+    @Override
+    public List<Film> getCommonFilms(Long userId, Long friendId) {
+        userService.findById(userId);
+        userService.findById(friendId);
+        return storage.getCommonFilms(userId, friendId);
+    }
+
     private Film validateFilmId(Long id) {
         return storage.findById(id).orElseThrow(() -> {
             log.info("Ошибка при валидации фильма.");

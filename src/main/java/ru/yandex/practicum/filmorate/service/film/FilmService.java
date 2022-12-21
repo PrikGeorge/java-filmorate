@@ -67,4 +67,13 @@ public interface FilmService {
      * @return Film
      */
     Film create(Film film);
+
+    /**
+     * Получение списка общих с другом фильмов, отсортированных по популярности
+     *
+     * @param userId
+     * @param friendId
+     * @return List
+     */
+    List<Film> getCommonFilms(Long userId, Long friendId);
 }

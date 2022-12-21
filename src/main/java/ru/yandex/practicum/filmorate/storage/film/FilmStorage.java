@@ -37,4 +37,13 @@ public interface FilmStorage extends Storage<Film> {
      * @return boolean
      */
     boolean removeLike(Long filmId, Long userId);
+
+    /**
+     * Получение списка общих с другом фильмов, отсортированных по популярности
+     *
+     * @param userId
+     * @param friendId
+     * @return List
+     */
+    List<Film> getCommonFilms(Long userId, Long friendId);
 }

@@ -43,4 +43,14 @@ public interface FilmController extends Controllers<Film> {
     @GetMapping("/popular")
     List<Film> getPopular(@RequestParam(required = false) Integer count);
 
+    /**
+     * Получение списка общих с другом фильмов, отсортированных по популярности
+     *
+     * @param userId
+     * @param friendId
+     * @return List
+     */
+    @GetMapping("/common")
+    List<Film> getCommonFilms(@RequestParam(value = "userId") Long userId, @RequestParam(value = "friendId") Long friendId);
+
 }
