@@ -62,7 +62,7 @@ public class FilmControllerImpl implements FilmController {
     }
 
     @Override
-    public boolean remove(Long id) {
+    public boolean remove(@PathVariable(value = "id") Long id) {
         return service.remove(id);
     }
 

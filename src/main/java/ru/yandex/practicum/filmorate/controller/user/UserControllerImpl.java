@@ -66,7 +66,7 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public boolean remove(Long id) {
+    public boolean remove(@PathVariable(value = "id") Long id) {
         return service.remove(id);
     }
 
