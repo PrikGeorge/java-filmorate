@@ -62,7 +62,6 @@ public class FilmMapper implements ResultSetExtractor<List<Film>> {
                 );
             }
 
-
         }
 
         return new ArrayList<>(films.values());

@@ -19,10 +19,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Types;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
@@ -192,7 +189,7 @@ public class FilmDbStorage implements FilmStorage {
                 "LEFT JOIN genres AS g ON fg.genre_id = g.id " +
                 "LEFT JOIN films_directors AS fd ON f.id = fd.film_id " +
                 "LEFT JOIN directors AS d ON fd.director_id = d.id " +
-                "ORDER BY l.likes_count DESC LIMIT ?";
+                "ORDER BY l.likes_count DESC";
 
         List<Film> films = jdbcTemplate.query(sql, new FilmMapper());
         Collections.reverse(Objects.requireNonNull(films));
@@ -216,6 +213,7 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public List<Film> getFilmsByDirectors(String directorId, String sortBy) {
 
+        List<Film> films = new ArrayList<>();
         String query;
         SortType type = EnumHelper.getSortTypeByName(sortBy);
 
@@ -234,8 +232,13 @@ public class FilmDbStorage implements FilmStorage {
                         "JOIN MPA_ratings as m ON f.MPA_ID = m.ID " +
                         "LEFT JOIN films_genres AS fg ON f.id = fg.film_id " +
                         "LEFT JOIN genres AS g ON fg.genre_id = g.id " +
-                        "WHERE fd.director_id=? " +
-                        "ORDER BY f.release_date ";
+                        "WHERE fd.director_id=? ";
+
+                films = Objects.requireNonNull(jdbcTemplate.query(query, new FilmMapper(), directorId))
+                        .stream()
+                        .sorted(Comparator.comparing(Film::getReleaseDate))
+                        .collect(Collectors.toList());
+
                 break;
             case LIKES:
                 query = "SELECT f.*, " +
@@ -253,14 +256,15 @@ public class FilmDbStorage implements FilmStorage {
                         "LEFT JOIN films_genres AS fg ON f.id = fg.film_id " +
                         "LEFT JOIN genres AS g ON fg.genre_id = g.id " +
                         "WHERE fd.director_id=? " +
-                        "GROUP BY fd.film_id, l.user_id " +
-                        "ORDER BY f.release_date DESC";
+                        "GROUP BY fd.film_id, l.user_id ";
+
+                films = jdbcTemplate.query(query, new FilmMapper(), directorId);
                 break;
             default:
-                throw new BadRequestException("Не верный формат сортировки.");
+                throw new BadRequestException("РќРµРІРµСЂРЅС‹Р№ РїР°СЂР°РјРµС‚СЂ.");
         }
 
-        return jdbcTemplate.query(query, new FilmMapper(), directorId);
+        return films;
     }
 
 }
