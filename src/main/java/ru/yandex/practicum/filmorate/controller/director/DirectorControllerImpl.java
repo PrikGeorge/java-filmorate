@@ -1,7 +1,9 @@
 package ru.yandex.practicum.filmorate.controller.director;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.service.director.DirectorService;
 
@@ -14,7 +16,7 @@ import java.util.List;
  */
 
 @RestController
-public class DirectorControllerImpl implements DirectorController{
+public class DirectorControllerImpl implements DirectorController {
 
     private final DirectorService service;
 

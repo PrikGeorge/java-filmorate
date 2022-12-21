@@ -19,6 +19,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Types;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -193,7 +194,9 @@ public class FilmDbStorage implements FilmStorage {
                 "LEFT JOIN directors AS d ON fd.director_id = d.id " +
                 "ORDER BY l.likes_count DESC LIMIT ?";
 
-        return jdbcTemplate.query(sql, new FilmMapper(), limit);
+        List<Film> films = jdbcTemplate.query(sql, new FilmMapper());
+        Collections.reverse(Objects.requireNonNull(films));
+        return Objects.requireNonNull(films).stream().limit(limit).collect(Collectors.toList());
     }
 
     @Override
@@ -254,7 +257,7 @@ public class FilmDbStorage implements FilmStorage {
                         "ORDER BY f.release_date DESC";
                 break;
             default:
-                throw new BadRequestException("РќРµ РІРµСЂРЅС‹Р№ С„РѕСЂРјР°С‚ СЃРѕСЂС‚РёСЂРѕРІРєРё.");
+                throw new BadRequestException("Не верный формат сортировки.");
         }
 
         return jdbcTemplate.query(query, new FilmMapper(), directorId);

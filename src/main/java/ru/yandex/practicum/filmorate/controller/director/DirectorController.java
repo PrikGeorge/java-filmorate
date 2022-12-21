@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.controller.director;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.yandex.practicum.filmorate.controller.Controllers;
 import ru.yandex.practicum.filmorate.model.Director;
-import ru.yandex.practicum.filmorate.model.Film;
 
 /**
  * @project java-filmorate
@@ -11,5 +10,5 @@ import ru.yandex.practicum.filmorate.model.Film;
  */
 
 @RequestMapping("/directors")
-public interface DirectorController  extends Controllers<Director> {
+public interface DirectorController extends Controllers<Director> {
 }

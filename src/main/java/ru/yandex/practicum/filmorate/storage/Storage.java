@@ -50,7 +50,7 @@ public interface Storage<T> {
      *
      * @param id
      */
-    default void remove(Long id){
+    default void remove(Long id) {
         throw new UnsupportedOperationException("Метод удаления объекта не реализован.");
     }
 

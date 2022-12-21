@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.service.director;
 import ru.yandex.practicum.filmorate.model.Director;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @project java-filmorate

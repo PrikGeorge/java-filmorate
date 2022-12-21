@@ -11,11 +11,11 @@ public enum SortType {
 
     private final String nameLowerCase;
 
-    public String getNameLowerCase() {
-        return nameLowerCase;
-    }
-
     SortType(String nameLowerCase) {
         this.nameLowerCase = nameLowerCase;
+    }
+
+    public String getNameLowerCase() {
+        return nameLowerCase;
     }
 }

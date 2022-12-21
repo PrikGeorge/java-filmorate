@@ -56,6 +56,6 @@ public class Film {
 
     @NonFinal
     @Setter
-    private List<Director> directors = new ArrayList<>();;
+    private List<Director> directors = new ArrayList<>();
 
 }

@@ -9,7 +9,6 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.user.UserService;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -90,7 +89,7 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public List<Film> getFilmsByDirectors(String directorId, String sortBy) {
         List<Film> films = storage.getFilmsByDirectors(directorId, sortBy);
-        if(films.isEmpty()){
+        if (films.isEmpty()) {
             log.info("Фильмы с таким режисером не найдены.");
             throw new EntityNotFoundException("Фильмы с таким режисером не найдены.");
         }
