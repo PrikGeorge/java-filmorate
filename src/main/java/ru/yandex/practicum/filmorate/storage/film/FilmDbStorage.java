@@ -6,10 +6,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.exception.BadRequestException;
 import ru.yandex.practicum.filmorate.mapper.FilmMapper;
 import ru.yandex.practicum.filmorate.mapper.MapperConstants;
+import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.SortType;
+import ru.yandex.practicum.filmorate.utils.EnumHelper;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -43,11 +47,15 @@ public class FilmDbStorage implements FilmStorage {
                 "m.name as mpa_name, " +
                 "m.id as mpa_id, " +
                 "g.id as genre_id, " +
-                "g.name AS genre_name " +
+                "g.name AS genre_name, " +
+                "d.id as director_id, " +
+                "d.name AS director_name " +
                 "FROM films as f " +
                 "JOIN MPA_ratings as m ON f.mpa_id = m.id " +
                 "LEFT JOIN films_genres AS fg ON f.id = fg.film_id " +
-                "LEFT JOIN genres AS g ON fg.genre_id = g.id ";
+                "LEFT JOIN genres AS g ON fg.genre_id = g.id " +
+                "LEFT JOIN films_directors AS fd ON f.id = fd.film_id " +
+                "LEFT JOIN directors AS d ON fd.director_id = d.id ";
 
         return jdbcTemplate.query(sqlQuery, new FilmMapper());
     }
@@ -79,7 +87,9 @@ public class FilmDbStorage implements FilmStorage {
         }, keyHolder);
         film.setId(Objects.requireNonNull(keyHolder.getKey()).longValue());
 
+        updateFilmDirectors(film);
         Optional<Film> opFilm = updateFilmGenres(film);
+
         if (opFilm.isPresent()) {
             film = opFilm.get();
         }
@@ -98,7 +108,9 @@ public class FilmDbStorage implements FilmStorage {
 
         jdbcTemplate.update(sqlQuery, film.getName(), film.getDescription(), film.getReleaseDate(),
                 film.getDuration(), film.getMpa().getId(), film.getId());
-        return updateFilmGenres(film);
+
+        updateFilmGenres(film);
+        return updateFilmDirectors(film);
     }
 
     @Override
@@ -107,11 +119,15 @@ public class FilmDbStorage implements FilmStorage {
                 "m.name AS mpa_name, " +
                 "m.id AS mpa_id, " +
                 "g.id as genre_id, " +
-                "g.name AS genre_name " +
+                "g.name AS genre_name, " +
+                "d.id as director_id, " +
+                "d.name AS director_name " +
                 "FROM films AS f " +
                 "JOIN MPA_ratings AS m ON f.mpa_id = m.id " +
                 "LEFT JOIN films_genres AS fg ON f.id = fg.film_id " +
                 "LEFT JOIN genres AS g ON fg.genre_id = g.id " +
+                "LEFT JOIN films_directors AS fd ON f.id = fd.film_id " +
+                "LEFT JOIN directors AS d ON fd.director_id = d.id " +
                 "WHERE f.id = ?";
 
         List<Film> res = jdbcTemplate.query(sqlQuery, new FilmMapper(), id);
@@ -138,13 +154,31 @@ public class FilmDbStorage implements FilmStorage {
         return findById(film.getId());
     }
 
+    private Optional<Film> updateFilmDirectors(Film film) {
+        jdbcTemplate.update("DELETE FROM films_directors WHERE film_id = ?", film.getId());
+
+        if (!isNull(film.getDirectors()) && !film.getDirectors().isEmpty()) {
+
+            String sql = "INSERT INTO films_directors (director_id, film_id) VALUES (?, ?)";
+            List<Long> directors = film.getDirectors().stream().map(Director::getId).distinct().collect(Collectors.toList());
+            jdbcTemplate.batchUpdate(sql, directors, 50,
+                    (PreparedStatement ps, Long directorId) -> {
+                        ps.setLong(1, directorId);
+                        ps.setLong(2, film.getId());
+                    });
+        }
+        return findById(film.getId());
+    }
+
     @Override
     public List<Film> getMostPopularFilms(int limit) {
         String sql = "SELECT *, " +
                 "m.id AS mpa_id, " +
                 "m.name AS mpa_name, " +
                 "g.id as genre_id, " +
-                "g.name AS genre_name " +
+                "g.name AS genre_name, " +
+                "d.id as director_id, " +
+                "d.name AS director_name " +
                 "FROM films f " +
                 "LEFT JOIN " +
                 "(SELECT film_id, " +
@@ -155,6 +189,8 @@ public class FilmDbStorage implements FilmStorage {
                 "LEFT JOIN MPA_ratings AS m ON f.mpa_id = m.id " +
                 "LEFT JOIN films_genres AS fg ON f.id = fg.film_id " +
                 "LEFT JOIN genres AS g ON fg.genre_id = g.id " +
+                "LEFT JOIN films_directors AS fd ON f.id = fd.film_id " +
+                "LEFT JOIN directors AS d ON fd.director_id = d.id " +
                 "ORDER BY l.likes_count DESC LIMIT ?";
 
         return jdbcTemplate.query(sql, new FilmMapper(), limit);
@@ -172,6 +208,56 @@ public class FilmDbStorage implements FilmStorage {
         String sql = "DELETE FROM films_likes WHERE film_id=? AND user_id=?";
 
         return jdbcTemplate.update(sql, filmId, userId) != 0;
+    }
+
+    @Override
+    public List<Film> getFilmsByDirectors(String directorId, String sortBy) {
+
+        String query;
+        SortType type = EnumHelper.getSortTypeByName(sortBy);
+
+        switch (type) {
+            case YEAR:
+                query = "SELECT f.*, " +
+                        "m.name as mpa_name, " +
+                        "m.id as mpa_id, " +
+                        "g.id as genre_id, " +
+                        "g.name AS genre_name, " +
+                        "d.id as director_id, " +
+                        "d.name AS director_name " +
+                        "FROM films_directors fd " +
+                        "LEFT JOIN directors as d ON d.id = fd.director_id " +
+                        "JOIN films f ON fd.film_id = f.id " +
+                        "JOIN MPA_ratings as m ON f.MPA_ID = m.ID " +
+                        "LEFT JOIN films_genres AS fg ON f.id = fg.film_id " +
+                        "LEFT JOIN genres AS g ON fg.genre_id = g.id " +
+                        "WHERE fd.director_id=? " +
+                        "ORDER BY f.release_date ";
+                break;
+            case LIKES:
+                query = "SELECT f.*, " +
+                        "m.name as mpa_name, " +
+                        "m.id as mpa_id, " +
+                        "g.id as genre_id, " +
+                        "g.name AS genre_name, " +
+                        "d.id as director_id, " +
+                        "d.name AS director_name " +
+                        "FROM films_directors fd " +
+                        "LEFT JOIN directors as d ON d.id = fd.director_id " +
+                        "JOIN films f ON fd.film_id = f.id " +
+                        "LEFT JOIN films_likes l ON fd.film_id = l.film_id " +
+                        "JOIN MPA_ratings as m ON f.MPA_ID = m.ID " +
+                        "LEFT JOIN films_genres AS fg ON f.id = fg.film_id " +
+                        "LEFT JOIN genres AS g ON fg.genre_id = g.id " +
+                        "WHERE fd.director_id=? " +
+                        "GROUP BY fd.film_id, l.user_id " +
+                        "ORDER BY f.release_date DESC";
+                break;
+            default:
+                throw new BadRequestException("Не верный формат сортировки.");
+        }
+
+        return jdbcTemplate.query(query, new FilmMapper(), directorId);
     }
 
 }
