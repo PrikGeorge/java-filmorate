@@ -195,7 +195,8 @@ public class FilmDbStorage implements FilmStorage {
                 "FROM films_likes " +
                 "WHERE user_id = ?) AS u ON u.film_id = films_likes.film_id " +
                 "WHERE user_id = ? " +
-                "GROUP BY films_likes.film_id) " +
+                "GROUP BY films_likes.film_id " +
+                "ORDER BY likes DESC) " +
                 "AS fl ON fl.film_id = f.id";
 
         return jdbcTemplate.query(sqlQuery, new FilmMapper(), userId, friendId);
