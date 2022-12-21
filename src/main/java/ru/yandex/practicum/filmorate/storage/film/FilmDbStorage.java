@@ -15,6 +15,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Types;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -161,9 +162,11 @@ public class FilmDbStorage implements FilmStorage {
                 "LEFT JOIN MPA_ratings AS m ON f.mpa_id = m.id " +
                 "LEFT JOIN films_genres AS fg ON f.id = fg.film_id " +
                 "LEFT JOIN genres AS g ON fg.genre_id = g.id " +
-                "ORDER BY l.likes_count DESC LIMIT ?";
+                "ORDER BY l.likes_count DESC";
 
-        return jdbcTemplate.query(sql, new FilmMapper(), limit);
+        List<Film> films = jdbcTemplate.query(sql, new FilmMapper());
+        Collections.reverse(Objects.requireNonNull(films));
+        return Objects.requireNonNull(films).stream().limit(limit).collect(Collectors.toList());
     }
 
     @Override
