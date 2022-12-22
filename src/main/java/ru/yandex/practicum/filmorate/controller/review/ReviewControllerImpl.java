@@ -7,13 +7,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.model.Review;
 import ru.yandex.practicum.filmorate.service.review.ReviewService;
-import ru.yandex.practicum.filmorate.service.user.UserService;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-public class ReviewControllerImpl implements ReviewController{
+public class ReviewControllerImpl implements ReviewController {
 
     private final ReviewService service;
 
@@ -28,13 +27,8 @@ public class ReviewControllerImpl implements ReviewController{
     }
 
     @Override
-    public Review update(Review review) {
+    public Review update(@Valid @RequestBody Review review) {
         return service.update(review);
-    }
-
-    @Override
-    public List<Review> getAll() {
-        return service.getAll();
     }
 
     @Override

@@ -9,8 +9,6 @@ public interface ReviewService {
 
     Review update(Review review);
 
-    List<Review> getAll();
-
     Review findById(Long id);
 
     boolean deleteReview(Long id);

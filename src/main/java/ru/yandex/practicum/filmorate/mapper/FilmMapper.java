@@ -45,9 +45,9 @@ public class FilmMapper implements ResultSetExtractor<List<Film>> {
             if (genreId != 0) {
                 films.get(id).getGenres().add(
                         Genre.builder()
-                        .id(genreId)
-                        .name(rs.getString(MapperConstants.GENRE_NAME.lowerCaseName()))
-                        .build()
+                                .id(genreId)
+                                .name(rs.getString(MapperConstants.GENRE_NAME.lowerCaseName()))
+                                .build()
                 );
             }
         }

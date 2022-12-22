@@ -45,13 +45,8 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<Review> getAll() {
-        return storage.getAll();
-    }
-
-    @Override
     public Review findById(Long id) {
-            return validateReviewId(id);
+        return validateReviewId(id);
     }
 
     @Override
@@ -62,7 +57,6 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public List<Review> getByFilmId(Long filmId, Integer count) {
-        filmService.findById(filmId);
         return storage.getByFilmId(filmId, count);
     }
 

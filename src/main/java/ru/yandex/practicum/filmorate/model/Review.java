@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.NonFinal;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Data
 @Builder
@@ -12,26 +13,24 @@ import javax.validation.constraints.NotBlank;
 public class Review {
     @NonFinal
     @Setter
-    @NotBlank
     private Long reviewId;
 
-    @NotBlank
+    @NotNull
     private Long userId;
 
-    @NotBlank
+    @NotNull
     private Long filmId;
 
     @NonFinal
     @Setter
-    @NotBlank
+    @NotNull
     private String content;
 
     @NonFinal
     @Setter
-    @NotBlank
+    @NotNull
     private Boolean isPositive;
 
-    @NotBlank
     @NonFinal
     @Setter
     private Integer useful;

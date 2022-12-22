@@ -7,14 +7,9 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.mapper.MapperConstants;
 import ru.yandex.practicum.filmorate.mapper.ReviewMapper;
-import ru.yandex.practicum.filmorate.mapper.UserMapper;
 import ru.yandex.practicum.filmorate.model.Review;
-import ru.yandex.practicum.filmorate.model.User;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.Types;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -31,33 +26,38 @@ public class ReviewDbStorage implements ReviewStorage {
 
     @Override
     public Review create(Review review) {
-        String sqlQuery = "INSERT INTO REVIEWS (film_id, user_id, content, ispositive, useful) " +
-                "VALUES (?, ?, ?, ?, ?)";
+            String sqlQuery = "INSERT INTO REVIEWS (film_id, user_id, content, ispositive, useful) " +
+                    "VALUES (?, ?, ?, ?, ?)";
 
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement stmt = connection.prepareStatement(sqlQuery, new String[]{MapperConstants.ID.lowerCaseName()});
-            stmt.setLong(1, review.getFilmId());
-            stmt.setLong(2, review.getUserId());
-            stmt.setString(3, review.getContent());
-            stmt.setBoolean(4, review.getIsPositive());
-            stmt.setInt(5, review.getUseful());
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+            jdbcTemplate.update(connection -> {
+                PreparedStatement stmt = connection.prepareStatement(sqlQuery, new String[]{MapperConstants.ID.lowerCaseName()});
+                stmt.setLong(1, review.getFilmId());
+                stmt.setLong(2, review.getUserId());
+                stmt.setString(3, review.getContent());
+                stmt.setBoolean(4, review.getIsPositive());
+                stmt.setInt(5, 0);
 
-            return stmt;
-        }, keyHolder);
+                return stmt;
+            }, keyHolder);
 
-        review.setReviewId(Objects.requireNonNull(keyHolder.getKey()).longValue());
-        return review;
+            review.setReviewId(Objects.requireNonNull(keyHolder.getKey()).longValue());
+            return review;
     }
 
     @Override
     public Optional<Review> update(Review review) {
-        String sqlQuery = "UPDATE REVIEWS SET film_id = ?, user_id = ?, content = ?, ispositive = ?, useful = ? " +
+        String sqlQuery = "UPDATE REVIEWS SET  content = ?, ispositive = ? " +
                 "WHERE id = ?";
 
-        return jdbcTemplate.update(sqlQuery, review.getFilmId(),
-                review.getUserId(), review.getContent(), review.getIsPositive(), review.getUseful(),
-                review.getReviewId()) == 0 ? Optional.empty() : Optional.of(review);
+        int result = jdbcTemplate.update(sqlQuery, review.getContent(), review.getIsPositive(),
+                review.getReviewId());
+        if (result == 0) {
+            return Optional.empty();
+        }  else {
+            Optional<Review> dbReview = findById(review.getReviewId());
+            return dbReview;
+        }
     }
 
     @Override
@@ -73,14 +73,6 @@ public class ReviewDbStorage implements ReviewStorage {
     }
 
     @Override
-    public List<Review> getAll() {
-        String sqlQuery = "SELECT id, film_id, user_id, content, ispositive, useful " +
-                "FROM REVIEWS";
-
-        return jdbcTemplate.query(sqlQuery, new ReviewMapper());
-    }
-
-    @Override
     public boolean deleteReview(Long id) {
         String sqlQuery = "DELETE FROM REVIEWS " +
                 "WHERE id = ?";
@@ -91,7 +83,7 @@ public class ReviewDbStorage implements ReviewStorage {
     @Override
     public List<Review> getByFilmId(Long filmId, Integer count) {
         String sqlQuery = "SELECT id, film_id, user_id, content, ispositive, useful " +
-                "FROM REVIEWS WHERE film_id = ? or ? ISNULL LIMIT ?";
+                "FROM REVIEWS WHERE film_id = ? or ? IS NULL ORDER BY useful DESC LIMIT ?";
 
         return jdbcTemplate.query(sqlQuery, new ReviewMapper(), filmId, filmId, count);
     }

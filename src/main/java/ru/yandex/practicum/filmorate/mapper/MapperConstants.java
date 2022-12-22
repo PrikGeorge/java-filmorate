@@ -29,4 +29,4 @@ public enum MapperConstants {
     public String lowerCaseName() {
         return lowerCaseName;
     }
-    }
+}
