@@ -43,4 +43,16 @@ public interface FilmController extends Controllers<Film> {
     @GetMapping("/popular")
     List<Film> getPopular(@RequestParam(required = false) Integer count);
 
+    /**
+     * Возвращает список фильмов режиссера отсортированных
+     * по количеству лайков или году выпуска.
+     *
+     * @param directorId
+     * @param sortBy
+     * @return
+     */
+    @GetMapping("/director/{directorId}")
+    List<Film> getFilmsByDirectors(@PathVariable String directorId,
+                                   @RequestParam(required = false, defaultValue = "year") String sortBy);
+
 }

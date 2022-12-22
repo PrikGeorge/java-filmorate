@@ -11,6 +11,8 @@ public enum MapperConstants {
     MPA_NAME("mpa_name"),
     GENRE_ID("genre_id"),
     GENRE_NAME("genre_name"),
+    DIRECTOR_ID("director_id"),
+    DIRECTOR_NAME("director_name"),
     EMAIL("email"),
     LOGIN("login"),
     BIRTHDAY("birthday");

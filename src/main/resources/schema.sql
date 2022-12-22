@@ -5,6 +5,8 @@ DROP TABLE IF EXISTS user_friends CASCADE;
 DROP TABLE IF EXISTS films_likes CASCADE;
 DROP TABLE IF EXISTS genres CASCADE;
 DROP TABLE IF EXISTS MPA_ratings CASCADE;
+DROP TABLE IF EXISTS directors CASCADE;
+DROP TABLE IF EXISTS films_directors CASCADE;
 
 CREATE TABLE IF NOT EXISTS genres
 (
@@ -62,3 +64,17 @@ CREATE TABLE IF NOT EXISTS films_likes
     user_id LONG REFERENCES users (id) ON DELETE CASCADE,
     PRIMARY KEY (user_id, film_id)
 );
+
+CREATE TABLE IF NOT EXISTS directors
+(
+    id LONG auto_increment PRIMARY KEY,
+    name VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS films_directors
+(
+    director_id LONG REFERENCES directors(id) ON DELETE CASCADE,
+    film_id LONG REFERENCES films(id) ON DELETE CASCADE,
+    PRIMARY KEY(film_id,director_id)
+);
+
