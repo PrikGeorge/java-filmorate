@@ -62,3 +62,21 @@ CREATE TABLE IF NOT EXISTS films_likes
     user_id LONG REFERENCES users (id) ON DELETE CASCADE,
     PRIMARY KEY (user_id, film_id)
 );
+
+CREATE TABLE IF NOT EXISTS reviews
+(
+    id            LONG auto_increment PRIMARY KEY,
+    film_id       LONG REFERENCES films (id) ON DELETE CASCADE,
+    user_id       LONG REFERENCES users (id) ON DELETE CASCADE,
+    content       VARCHAR(10000) NOT NULL,
+    isPositive    BOOLEAN NOT NULL DEFAULT 0,
+    useful        INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS review_likes
+(
+    review_id     LONG REFERENCES reviews (id) ON DELETE CASCADE,
+    user_id       LONG REFERENCES users (id) ON DELETE CASCADE,
+    isPositive    BOOLEAN NOT NULL DEFAULT 0,
+    PRIMARY KEY (user_id, review_id)
+);

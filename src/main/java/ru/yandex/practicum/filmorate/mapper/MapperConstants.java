@@ -13,7 +13,13 @@ public enum MapperConstants {
     GENRE_NAME("genre_name"),
     EMAIL("email"),
     LOGIN("login"),
-    BIRTHDAY("birthday");
+    BIRTHDAY("birthday"),
+    FILM_ID("film_id"),
+    USER_ID("user_id"),
+    CONTENT("content"),
+    ISPOSITIVE("ispositive"),
+    USEFUL("useful");
+
     private final String lowerCaseName;
 
     MapperConstants(String lowerCaseName) {
@@ -23,4 +29,4 @@ public enum MapperConstants {
     public String lowerCaseName() {
         return lowerCaseName;
     }
-}
+    }
