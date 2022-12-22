@@ -35,12 +35,17 @@ public interface FilmController extends Controllers<Film> {
     boolean removeLike(@PathVariable(value = "id") Long id, @PathVariable(value = "userId") Long userId);
 
     /**
-     * Получение списка популярных фильмов
+     * Вывод самых популярных фильмов по жанру и годам
      *
-     * @param count количество фильмов, которое нужно вернуть
+     * @param count
+     * @param genreId
+     * @param year
      * @return List
      */
     @GetMapping("/popular")
-    List<Film> getPopular(@RequestParam(required = false) Integer count);
+    List<Film> getPopular(
+            @RequestParam(required = false, defaultValue = "10") Integer count,
+            @RequestParam(required = false) Integer genreId,
+            @RequestParam(required = false) Integer year);
 
 }

@@ -32,10 +32,12 @@ public interface FilmService {
     /**
      * Получение списка популярных фильмов
      *
-     * @param limit количество фильмов, которое нужно вернуть
+     * @param limit   количество фильмов, которое нужно вернуть
+     * @param genreId
+     * @param year
      * @return List
      */
-    List<Film> getMostPopularFilms(Integer limit);
+    List<Film> getMostPopularFilms(Integer limit, Integer genreId, Integer year);
 
     /**
      * Поиск фильма по id

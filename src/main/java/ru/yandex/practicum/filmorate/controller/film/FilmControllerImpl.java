@@ -57,8 +57,11 @@ public class FilmControllerImpl implements FilmController {
     }
 
     @Override
-    public List<Film> getPopular(@RequestParam(required = false) Integer count) {
-        return service.getMostPopularFilms(count);
+    public List<Film> getPopular(
+            @RequestParam(required = false, defaultValue = "10") Integer count,
+            @RequestParam(required = false) Integer genreId,
+            @RequestParam(required = false) Integer year) {
+        return service.getMostPopularFilms(count, genreId, year);
     }
 
 }
