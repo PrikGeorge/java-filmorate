@@ -67,4 +67,9 @@ public class FilmControllerImpl implements FilmController {
         return service.getFilmsByDirectors(directorId, sortBy);
     }
 
+    @Override
+    public List<Film> search(@RequestParam() String query, @RequestParam() String by) {
+        return service.search(query, by);
+    }
+
 }
