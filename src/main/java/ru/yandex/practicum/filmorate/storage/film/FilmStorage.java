@@ -38,11 +38,13 @@ public interface FilmStorage extends Storage<Film> {
      */
     boolean removeLike(Long filmId, Long userId);
 
+
     /**
      * Получение рекмоендаций
      *
      * @param id
      * @return List
      */
-    List<Film> getRecommendations(Long id);
+
+   // List<Film> getRecommendation(Long id);
 }

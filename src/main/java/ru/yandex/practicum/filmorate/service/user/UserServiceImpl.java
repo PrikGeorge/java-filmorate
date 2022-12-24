@@ -105,7 +105,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<Film> getRecommendations(Long id) {
-        return filmStorage.getRecommendations(id);
+    public List<Film> getRecommendations(@NonNull Long id) {
+        validateUserId(id);
+        return storage.getRecommendation(id);
     }
 }

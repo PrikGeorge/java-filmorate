@@ -1,11 +1,11 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.mapper.FilmMapper;
 import ru.yandex.practicum.filmorate.mapper.MapperConstants;
@@ -17,6 +17,8 @@ import java.sql.PreparedStatement;
 import java.sql.Types;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
@@ -27,6 +29,7 @@ import static java.util.Objects.isNull;
  */
 
 @Repository
+@Slf4j
 public class FilmDbStorage implements FilmStorage {
 
     private final JdbcTemplate jdbcTemplate;
@@ -175,31 +178,10 @@ public class FilmDbStorage implements FilmStorage {
         return jdbcTemplate.update(sql, filmId, userId) != 0;
     }
 
+    /*
     @Override
-    public List<Film> getRecommendations(Long id) {
-        String sql = "SELECT films.*, m.name  " +
-                "FROM films " +
-                "INNER JOIN (SELECT film_id " +
-                "FROM (SELECT flike.user_id, COUNT(flike.film_id) AS matching " +
-                "FROM films_likes AS flike " +
-                "INNER JOIN films_likes AS ulike " +
-                "ON flike.film_id = ulike.film_id " +
-                "WHERE ulike.user_id = ? AND flike.user_id <> ? " +
-                "GROUP BY flike.user_id " +
-                "ORDER BY matching DESC " +
-                "LIMIT 1) AS bind " +
-                "INNER JOIN films_likes AS bindedFilm " +
-                "ON bind.user_id = bindedFilm.user_id " +
-                "WHERE bindedFilm.film_id NOT IN (SELECT film_id " +
-                "FROM films_likes " +
-                "WHERE user_id = ?)) AS rec " +
-                "ON rec.film_id = films.id " +
-                "LEFT JOIN MPA_ratings as m " +
-                "ON m.id = films.MPA_id " +
-                "ORDER BY films.id DESC";
-
-        List<Film> films = jdbcTemplate.query(sql, new FilmMapper());
-        Collections.reverse(Objects.requireNonNull(films));
-        return Objects.requireNonNull(films).stream().limit(id).collect(Collectors.toList());
+    public List<Film> getRecommendation(Long id) {
     }
+
+     */
 }

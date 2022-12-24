@@ -1,12 +1,16 @@
+
 package ru.yandex.practicum.filmorate.storage.user;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.mapper.FilmMapper;
 import ru.yandex.practicum.filmorate.mapper.MapperConstants;
 import ru.yandex.practicum.filmorate.mapper.UserMapper;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.Date;
@@ -14,6 +18,9 @@ import java.sql.PreparedStatement;
 import java.sql.Types;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 /**
  * @project java-filmorate
@@ -21,6 +28,7 @@ import java.util.*;
  */
 
 @Repository
+@Slf4j
 public class UserDbStorage implements UserStorage {
 
     private final JdbcTemplate jdbcTemplate;
@@ -126,5 +134,49 @@ public class UserDbStorage implements UserStorage {
         return new HashSet<>(
                 jdbcTemplate.query(sql, (rs, num) -> rs.getLong("friend_id"), id)
         );
+    }
+
+    @Override
+    public List<Film> getRecommendation(Long id) {
+        List<User> users = getAll().stream().filter(user -> !Objects.equals(user.getId(), id)).collect(Collectors.toList());
+        log.info("users" + users);
+        String sql = "SELECT f.id " +
+                "FROM films f " +
+                "INNER JOIN films_likes ul on ul.film_id = f.id and ul.user_id = ? " +
+                "INNER JOIN films_likes fl on fl.film_id = f.id and fl.user_id = ? ";
+        AtomicInteger max = new AtomicInteger(0);
+        AtomicLong userWithCommonFilms = new AtomicLong();
+        users.forEach(user -> {
+            List<Long> commonFilms = jdbcTemplate.query(sql, (rs, num) -> rs.getLong("id"), id, user.getId());
+            if (commonFilms.size() > max.get()) {
+                max.set(commonFilms.size());
+                userWithCommonFilms.set(user.getId());
+            }
+        });
+        log.info("max "+max.get()+" user "+userWithCommonFilms.get());
+        List<Long> commonFilms = jdbcTemplate.query(sql, (rs, num) -> rs.getLong("id"), id, userWithCommonFilms.get());
+        log.info("common " + commonFilms);
+        String sqlQuery = "SELECT f.*, " +
+                "m.name as mpa_name, " +
+                "m.id as mpa_id, " +
+                "g.id as genre_id, " +
+                "g.name AS genre_name " +
+                "FROM films as f " +
+                "JOIN MPA_ratings as m ON f.mpa_id = m.id " +
+                "LEFT JOIN films_genres AS fg ON f.id = fg.film_id " +
+                "LEFT JOIN genres AS g ON fg.genre_id = g.id " +
+                "WHERE f.id IN (" +
+                "SELECT FILM_ID " +
+                "FROM films_likes " +
+                "WHERE user_id = ?)";
+        List<Film> filmsWithoutCommons = new ArrayList<>();
+        List<Film> otherUserFilms = jdbcTemplate.query(sqlQuery, new FilmMapper(), id);
+        otherUserFilms.forEach(film -> {
+            if(!commonFilms.contains(film.getId())) {
+                filmsWithoutCommons.add(film);
+            }
+        });
+        log.info("films with common "+otherUserFilms);
+        return filmsWithoutCommons;
     }
 }

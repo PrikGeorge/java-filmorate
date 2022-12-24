@@ -60,6 +60,6 @@ public interface UserController extends Controllers<User> {
      * @param id
      * @return List
      */
-    @GetMapping("/users/{id}/recommendations")
+    @GetMapping("/{id}/recommendations")
     List<Film> getRecommendations(@PathVariable(value = "id") Long id);
 }
