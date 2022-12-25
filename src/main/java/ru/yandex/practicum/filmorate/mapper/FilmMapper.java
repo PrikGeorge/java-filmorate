@@ -9,10 +9,7 @@ import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @project java-filmorate
@@ -21,7 +18,7 @@ import java.util.Map;
 public class FilmMapper implements ResultSetExtractor<List<Film>> {
     @Override
     public List<Film> extractData(ResultSet rs) throws SQLException, DataAccessException {
-        Map<Long, Film> films = new HashMap<>();
+        LinkedHashMap<Long, Film> films = new LinkedHashMap<>();
 
         while (rs.next()) {
             long id = rs.getLong(MapperConstants.ID.lowerCaseName());
@@ -38,6 +35,7 @@ public class FilmMapper implements ResultSetExtractor<List<Film>> {
                             .build())
                     .genres(new ArrayList<>())
                     .directors(new ArrayList<>())
+                    .likes(new HashSet<>())
                     .build()
 
             );

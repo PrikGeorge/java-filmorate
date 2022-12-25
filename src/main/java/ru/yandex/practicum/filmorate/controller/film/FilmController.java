@@ -49,10 +49,20 @@ public interface FilmController extends Controllers<Film> {
      *
      * @param directorId
      * @param sortBy
-     * @return
+     * @return List
      */
     @GetMapping("/director/{directorId}")
     List<Film> getFilmsByDirectors(@PathVariable String directorId,
                                    @RequestParam(required = false, defaultValue = "year") String sortBy);
+
+    /**
+     * Поиск по названию фильмов и по режиссёру
+     *
+     * @param query
+     * @param by
+     * @return List
+     */
+    @GetMapping("/search")
+    List<Film> search(@RequestParam() String query, @RequestParam() String by);
 
 }
