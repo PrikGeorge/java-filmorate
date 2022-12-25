@@ -76,8 +76,8 @@ public class DirectorDbStorage implements DirectorStorage {
     }
 
     @Override
-    public void remove(Long id) {
-        jdbcTemplate.update("DELETE FROM directors WHERE id=?", id);
+    public boolean remove(Long id) {
+        return jdbcTemplate.update("DELETE FROM directors WHERE id=?", id) != 0;
     }
 
 }

@@ -19,6 +19,6 @@ public interface DirectorService {
 
     Director create(Director director);
 
-    void remove(Long id);
+    boolean remove(Long id);
 
 }

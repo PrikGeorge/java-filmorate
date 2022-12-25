@@ -53,7 +53,7 @@ public class DirectorServiceImpl implements DirectorService {
     }
 
     @Override
-    public void remove(Long id) {
-        storage.remove(id);
+    public boolean remove(Long id) {
+        return storage.remove(id);
     }
 }

@@ -63,14 +63,4 @@ public interface Controllers<T> {
     @GetMapping("/{id}")
     T findById(@PathVariable(value = "id") Long id);
 
-    /**
-     * Удаление объекта по id
-     *
-     * @param id
-     */
-    @DeleteMapping("/{id}")
-    default void remove(@PathVariable(value = "id") Long id) {
-        throw new UnsupportedOperationException("Метод удаления объекта не реализован.");
-    }
-
 }
