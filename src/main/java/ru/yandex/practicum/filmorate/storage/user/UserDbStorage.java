@@ -69,8 +69,12 @@ public class UserDbStorage implements UserStorage {
         String sqlQuery = "UPDATE users SET name = ?, login = ?, email = ?, birthday = ? " +
                 "WHERE id = ?";
 
-        return jdbcTemplate.update(sqlQuery, user.getName(),
-                user.getLogin(), user.getEmail(), user.getBirthday(), user.getId()) == 0 ? Optional.empty() : Optional.of(user);
+        return jdbcTemplate.update(sqlQuery,
+                user.getName(),
+                user.getLogin(),
+                user.getEmail(),
+                user.getBirthday(),
+                user.getId()) == 0 ? Optional.empty() : Optional.of(user);
     }
 
     @Override
