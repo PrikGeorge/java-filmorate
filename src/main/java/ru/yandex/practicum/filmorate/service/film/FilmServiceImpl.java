@@ -89,8 +89,13 @@ public class FilmServiceImpl implements FilmService {
         if (Objects.nonNull(film.getId())) {
             validateFilmId(film.getId());
         }
-
         return storage.create(film);
+    }
+
+    @Override
+    public boolean remove(@NonNull Long id) {
+        validateFilmId(id);
+        return storage.remove(id);
     }
 
     private Film validateFilmId(Long id) {
@@ -98,6 +103,22 @@ public class FilmServiceImpl implements FilmService {
             log.info("Ошибка при валидации фильма.");
             throw new EntityNotFoundException("Фильм с id=" + id + " не найден");
         });
+    }
+
+    @Override
+    public List<Film> getFilmsByDirectors(String directorId, String sortBy) {
+        List<Film> films = storage.getFilmsByDirectors(directorId, sortBy);
+        if (films.isEmpty()) {
+            log.info("Фильмы с таким режисером не найдены.");
+            throw new EntityNotFoundException("Фильмы с таким режисером не найдены.");
+        }
+
+        return films;
+    }
+
+    @Override
+    public List<Film> search(String query, String by) {
+        return storage.search(query, by);
     }
 
 }

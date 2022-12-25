@@ -65,6 +65,11 @@ public class UserControllerImpl implements UserController {
         return service.getMutualFriends(id, otherId);
     }
 
+    @Override
+    public boolean remove(@PathVariable(value = "id") Long id) {
+        return service.remove(id);
+    }
+
 }
 
 
