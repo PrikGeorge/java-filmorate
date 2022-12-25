@@ -46,6 +46,4 @@ public interface UserStorage extends Storage<User> {
      * @return List
      */
     List<User> getFriends(Long id);
-
-
 }
