@@ -132,10 +132,12 @@ public class UserDbStorage implements UserStorage {
     public List<Film> getRecommendation(Long id) {
         List<User> users = getAll().stream().filter(user -> !Objects.equals(user.getId(), id)).collect(Collectors.toList());
         log.info("users" + users);
-        String sql = "SELECT f.id " +
-                "FROM films f " +
-                "INNER JOIN films_likes ul on ul.film_id = f.id and ul.user_id = ? " +
-                "INNER JOIN films_likes fl on fl.film_id = f.id and fl.user_id = ? ";
+        String sql = "SELECT film_id AS id " +
+                "FROM films_likes " +
+                "WHERE film_id IN (SELECT FILM_ID " +
+                "FROM films_likes " +
+                "WHERE user_id = ?) " +
+                "AND user_id = ?";
         AtomicInteger max = new AtomicInteger(0);
         AtomicLong userWithCommonFilms = new AtomicLong();
         users.forEach(user -> {
@@ -162,7 +164,7 @@ public class UserDbStorage implements UserStorage {
                 "FROM films_likes " +
                 "WHERE user_id = ?)";
         List<Film> filmsWithoutCommons = new ArrayList<>();
-        List<Film> otherUserFilms = jdbcTemplate.query(sqlQuery, new FilmMapper(), id);
+        List<Film> otherUserFilms = jdbcTemplate.query(sqlQuery, new FilmMapper(), userWithCommonFilms.get());
                 otherUserFilms.forEach(film -> {
                             if(!commonFilms.contains(film.getId())) {
                                 filmsWithoutCommons.add(film);
