@@ -58,6 +58,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getFriends(Long id) {
+        validateUserId(id);
         return storage.getFriends(id);
     }
 
@@ -91,6 +92,12 @@ public class UserServiceImpl implements UserService {
         }
 
         return storage.create(user);
+    }
+
+    @Override
+    public boolean remove(@NonNull Long id) {
+        validateUserId(id);
+        return storage.remove(id);
     }
 
     private User validateUserId(Long id) {

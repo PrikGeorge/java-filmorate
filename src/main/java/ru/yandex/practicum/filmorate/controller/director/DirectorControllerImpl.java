@@ -46,8 +46,8 @@ public class DirectorControllerImpl implements DirectorController {
     }
 
     @Override
-    public void remove(@PathVariable(value = "id") Long id) {
-        service.remove(id);
+    public boolean remove(@PathVariable(value = "id") Long id) {
+        return service.remove(id);
     }
 
 }

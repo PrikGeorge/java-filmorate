@@ -75,8 +75,13 @@ public class FilmServiceImpl implements FilmService {
         if (Objects.nonNull(film.getId())) {
             validateFilmId(film.getId());
         }
-
         return storage.create(film);
+    }
+
+    @Override
+    public boolean remove(@NonNull Long id) {
+        validateFilmId(id);
+        return storage.remove(id);
     }
 
     private Film validateFilmId(Long id) {

@@ -28,11 +28,22 @@ public interface Controllers<T> {
      * Обновление объекта
      *
      * @param obj
-     * @return Film
+     * @return T
      */
     @PutMapping
     default T update(@Valid @RequestBody T obj) {
         throw new UnsupportedOperationException("Метод обновления объекта не реализован.");
+    }
+
+    /**
+     * Удаление объекта
+     *
+     * @param id
+     * @return boolean
+     */
+    @DeleteMapping("/{id}")
+    default boolean remove(@PathVariable(value = "id") Long id) {
+        throw new UnsupportedOperationException("Метод удаления объекта не реализован.");
     }
 
     /**
@@ -51,15 +62,5 @@ public interface Controllers<T> {
      */
     @GetMapping("/{id}")
     T findById(@PathVariable(value = "id") Long id);
-
-    /**
-     * Удаление объекта по id
-     *
-     * @param id
-     */
-    @DeleteMapping("/{id}")
-    default void remove(@PathVariable(value = "id") Long id) {
-        throw new UnsupportedOperationException("Метод удаления объекта не реализован.");
-    }
 
 }

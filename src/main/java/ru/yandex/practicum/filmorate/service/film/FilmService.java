@@ -69,6 +69,14 @@ public interface FilmService {
     Film create(Film film);
 
     /**
+     * Удаление фильма
+     *
+     * @param id
+     * @return boolean
+     */
+    boolean remove(Long id);
+
+     /**
      * Возвращает список фильмов режиссера отсортированных
      * по количеству лайков или году выпуска
      *
