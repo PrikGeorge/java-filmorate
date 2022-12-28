@@ -18,9 +18,6 @@ import java.sql.PreparedStatement;
 import java.sql.Types;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;

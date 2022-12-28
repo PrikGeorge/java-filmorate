@@ -20,7 +20,12 @@ public enum MapperConstants {
     USER_ID("user_id"),
     CONTENT("content"),
     IS_POSITIVE("is_positive"),
-    USEFUL("useful");
+    USEFUL("useful"),
+    EVENT_ID("event_id"),
+    ENTITY_ID("entity_id"),
+    EVENT_TYPE("event_type"),
+    OPERATION("operation"),
+    TIMESTAMP("timestamp");
 
     private final String lowerCaseName;
 

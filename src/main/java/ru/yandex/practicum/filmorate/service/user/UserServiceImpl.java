@@ -4,9 +4,13 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.aop.feed.AddEvent;
+import ru.yandex.practicum.filmorate.aop.feed.RemoveEvent;
 import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
+import ru.yandex.practicum.filmorate.model.Event;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.event.EventStorage;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
@@ -26,26 +30,35 @@ public class UserServiceImpl implements UserService {
     private final UserStorage storage;
     private final FilmStorage filmStorage;
 
+    private final EventStorage eventStorage;
+
     @Autowired
-    public UserServiceImpl(UserStorage storage, FilmStorage filmStorage) {
+    public UserServiceImpl(UserStorage storage,
+                           FilmStorage filmStorage,
+                           EventStorage eventStorage) {
         this.storage = storage;
         this.filmStorage = filmStorage;
+        this.eventStorage = eventStorage;
     }
 
     @Override
-    public boolean addFriend(Long id, Long friendId) {
-        validateUserId(id);
+    @AddEvent
+    public User addFriend(Long id, Long friendId) {
+        User sourceUser = validateUserId(id);
         validateUserId(friendId);
 
-        return storage.addFriend(id, friendId);
+        storage.addFriend(id, friendId);
+        return sourceUser;
     }
 
     @Override
-    public boolean deleteFriend(Long id, Long friendId) {
-        validateUserId(id);
+    @RemoveEvent
+    public User deleteFriend(Long id, Long friendId) {
+        User user = validateUserId(id);
         validateUserId(friendId);
 
-        return storage.deleteFriend(id, friendId);
+        storage.deleteFriend(id, friendId);
+        return user;
     }
 
     @Override
@@ -115,5 +128,11 @@ public class UserServiceImpl implements UserService {
     public List<Film> getRecommendations(@NonNull Long id) {
         validateUserId(id);
         return storage.getRecommendation(id);
+    }
+
+    @Override
+    public List<Event> getFeed(Long id) {
+        validateUserId(id);
+        return eventStorage.getEventsByUserId(id);
     }
 }

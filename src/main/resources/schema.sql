@@ -7,26 +7,26 @@ DROP TABLE IF EXISTS genres CASCADE;
 DROP TABLE IF EXISTS MPA_ratings CASCADE;
 DROP TABLE IF EXISTS reviews CASCADE;
 DROP TABLE IF EXISTS reviews_likes CASCADE;
-
 DROP TABLE IF EXISTS directors CASCADE;
 DROP TABLE IF EXISTS films_directors CASCADE;
+DROP TABLE IF EXISTS events CASCADE;
 
 CREATE TABLE IF NOT EXISTS genres
 (
     id   LONG auto_increment PRIMARY KEY,
-    name VARCHAR(50) NOT NULL
+    name TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS MPA_ratings
 (
     id   LONG auto_increment PRIMARY KEY,
-    name VARCHAR(16) NOT NULL
+    name TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS films
 (
     id           LONG auto_increment PRIMARY KEY,
-    name         VARCHAR(255) NOT NULL,
+    name         TEXT NOT NULL,
     description  TEXT         NOT NULL,
     release_date DATE         NOT NULL,
     duration     INTEGER,
@@ -43,9 +43,9 @@ CREATE TABLE IF NOT EXISTS films_genres
 CREATE TABLE IF NOT EXISTS users
 (
     id       LONG auto_increment PRIMARY KEY,
-    login    VARCHAR(25) NOT NULL,
-    name     VARCHAR(255),
-    email    VARCHAR(50) NOT NULL,
+    login    TEXT NOT NULL,
+    name     TEXT,
+    email    TEXT NOT NULL,
     birthday DATE
 );
 
@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS reviews_likes
 CREATE TABLE IF NOT EXISTS directors
 (
     id LONG auto_increment PRIMARY KEY,
-    name VARCHAR(50) NOT NULL
+    name TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS films_directors
@@ -99,3 +99,12 @@ CREATE TABLE IF NOT EXISTS films_directors
     PRIMARY KEY(film_id,director_id)
 );
 
+CREATE TABLE IF NOT EXISTS events
+(
+    event_id   LONG auto_increment PRIMARY KEY,
+    user_id    LONG REFERENCES users(id) ON DELETE CASCADE,
+    entity_id  LONG,
+    event_type  TEXT,
+    operation  TEXT,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );

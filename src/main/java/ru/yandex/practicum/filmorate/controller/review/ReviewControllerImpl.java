@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.service.review.ReviewService;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 public class ReviewControllerImpl implements ReviewController {
@@ -38,15 +39,13 @@ public class ReviewControllerImpl implements ReviewController {
 
     @Override
     public boolean deleteReview(@PathVariable(value = "id") Long id) {
-        return service.deleteReview(id);
+        return Objects.nonNull(service.deleteReview(id));
     }
-
 
     @Override
     public List<Review> getReviews(@RequestParam(required = false) Long filmId, @RequestParam(defaultValue = "10", required = false) Integer count) {
         return service.getReviews(filmId, count);
     }
-
 
     @Override
     public boolean addLike(@PathVariable(value = "id") Long id, @PathVariable(value = "userId") Long userId) {

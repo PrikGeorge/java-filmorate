@@ -1,12 +1,16 @@
 package ru.yandex.practicum.filmorate.controller.film;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.film.FilmService;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @project java-filmorate
@@ -45,12 +49,12 @@ public class FilmControllerImpl implements FilmController {
 
     @Override
     public boolean addLike(@PathVariable(value = "id") Long id, @PathVariable(value = "userId") Long userId) {
-        return service.addLike(id, userId);
+        return Objects.nonNull(service.addLike(id, userId));
     }
 
     @Override
     public boolean removeLike(@PathVariable(value = "id") Long id, @PathVariable(value = "userId") Long userId) {
-        return service.removeLike(id, userId);
+        return Objects.nonNull(service.removeLike(id, userId));
     }
 
     @Override
