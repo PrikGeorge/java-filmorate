@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -68,8 +69,12 @@ public class UserDbStorage implements UserStorage {
         String sqlQuery = "UPDATE users SET name = ?, login = ?, email = ?, birthday = ? " +
                 "WHERE id = ?";
 
-        return jdbcTemplate.update(sqlQuery, user.getName(),
-                user.getLogin(), user.getEmail(), user.getBirthday(), user.getId()) == 0 ? Optional.empty() : Optional.of(user);
+        return jdbcTemplate.update(sqlQuery,
+                user.getName(),
+                user.getLogin(),
+                user.getEmail(),
+                user.getBirthday(),
+                user.getId()) == 0 ? Optional.empty() : Optional.of(user);
     }
 
     @Override
@@ -119,6 +124,12 @@ public class UserDbStorage implements UserStorage {
                 "WHERE f.user_id = ?";
 
         return jdbcTemplate.query(sql, new UserMapper(), id);
+    }
+
+    @Override
+    public boolean remove(@NonNull Long id) {
+        String sqlQuery = "DELETE FROM users WHERE id = ?";
+        return jdbcTemplate.update(sqlQuery, id) != 0;
     }
 
     private Set<Long> getFriendsByUserId(long id) {

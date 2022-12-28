@@ -54,4 +54,8 @@ public class Film {
     @NotNull
     private Mpa mpa;
 
+    @NonFinal
+    @Setter
+    private List<Director> directors = new ArrayList<>();
+
 }

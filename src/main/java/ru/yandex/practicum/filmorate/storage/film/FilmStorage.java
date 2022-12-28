@@ -39,4 +39,32 @@ public interface FilmStorage extends Storage<Film> {
      * @return boolean
      */
     boolean removeLike(Long filmId, Long userId);
+
+    /**
+     * Получение списка общих с другом фильмов, отсортированных по популярности
+     *
+     * @param userId
+     * @param friendId
+     * @return List
+     */
+    List<Film> getCommonFilms(Long userId, Long friendId);
+
+    /**
+     * Возвращает список фильмов режиссера отсортированных
+     * по количеству лайков или году выпуска.
+     *
+     * @param directorId
+     * @param sortBy
+     * @return
+     */
+    List<Film> getFilmsByDirectors(String directorId, String sortBy);
+
+    /**
+     * Поиск по названию фильмов и по режиссёру
+     *
+     * @param query
+     * @param by
+     * @return List
+     */
+    List<Film> search(String query, String by);
 }

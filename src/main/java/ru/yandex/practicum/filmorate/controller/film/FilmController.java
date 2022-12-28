@@ -48,4 +48,36 @@ public interface FilmController extends Controllers<Film> {
             @RequestParam(required = false) Integer genreId,
             @RequestParam(required = false) Integer year);
 
+    /**
+     * Получение списка общих с другом фильмов, отсортированных по популярности
+     *
+     * @param userId
+     * @param friendId
+     * @return List
+     */
+    @GetMapping("/common")
+    List<Film> getCommonFilms(@RequestParam(value = "userId") Long userId, @RequestParam(value = "friendId") Long friendId);
+
+    /**
+     * Возвращает список фильмов режиссера отсортированных
+     * по количеству лайков или году выпуска.
+     *
+     * @param directorId
+     * @param sortBy
+     * @return List
+     */
+    @GetMapping("/director/{directorId}")
+    List<Film> getFilmsByDirectors(@PathVariable String directorId,
+                                   @RequestParam(required = false, defaultValue = "year") String sortBy);
+
+    /**
+     * Поиск по названию фильмов и по режиссёру
+     *
+     * @param query
+     * @param by
+     * @return List
+     */
+    @GetMapping("/search")
+    List<Film> search(@RequestParam() String query, @RequestParam() String by);
+
 }
