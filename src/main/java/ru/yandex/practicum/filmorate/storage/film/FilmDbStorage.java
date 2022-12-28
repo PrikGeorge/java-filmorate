@@ -16,6 +16,10 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Types;
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -211,6 +215,35 @@ public class FilmDbStorage implements FilmStorage {
         String sql = "DELETE FROM films_likes WHERE film_id=? AND user_id=?";
 
         return jdbcTemplate.update(sql, filmId, userId) != 0;
+    }
+
+    @Override
+    public List<Film> getCommonFilms(Long userId, Long friendId) {
+        String sqlQuery = "SELECT f.*, " +
+                "m.name AS mpa_name, " +
+                "m.id AS mpa_id, " +
+                "g.id as genre_id, " +
+                "g.name AS genre_name, " +
+                "d.id as director_id, " +
+                "d.name AS director_name " +
+                "FROM films AS f " +
+                "JOIN MPA_ratings AS m ON f.mpa_id = m.id " +
+                "LEFT JOIN films_genres AS fg ON f.id = fg.film_id " +
+                "LEFT JOIN genres AS g ON fg.genre_id = g.id " +
+                "LEFT JOIN films_directors AS fd ON f.id = fd.film_id " +
+                "LEFT JOIN directors AS d ON fd.director_id = d.id " +
+                "RIGHT JOIN (SELECT films_likes.film_id," +
+                "COUNT(user_id) AS likes " +
+                "FROM films_likes " +
+                "JOIN ( SELECT film_id " +
+                "FROM films_likes " +
+                "WHERE user_id = ?) AS u ON u.film_id = films_likes.film_id " +
+                "WHERE user_id = ? " +
+                "GROUP BY films_likes.film_id " +
+                "ORDER BY likes DESC) " +
+                "AS fl ON fl.film_id = f.id";
+
+        return jdbcTemplate.query(sqlQuery, new FilmMapper(), userId, friendId);
     }
 
     @Override

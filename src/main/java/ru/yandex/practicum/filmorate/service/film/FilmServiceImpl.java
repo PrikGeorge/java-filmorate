@@ -79,6 +79,13 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
+    public List<Film> getCommonFilms(Long userId, Long friendId) {
+        userService.findById(userId);
+        userService.findById(friendId);
+        return storage.getCommonFilms(userId, friendId);
+    }
+
+    @Override
     public boolean remove(@NonNull Long id) {
         validateFilmId(id);
         return storage.remove(id);
