@@ -107,4 +107,4 @@ CREATE TABLE IF NOT EXISTS events
     event_type  TEXT,
     operation  TEXT,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
+);

@@ -362,4 +362,26 @@ public class FilmDbStorage implements FilmStorage {
         return jdbcTemplate.query(sqlBase, new FilmMapper(), searchWords);
     }
 
+    @Override
+    public Film checkLike(Long filmId, Long userId) {
+        String sql = "SELECT f.*, " +
+                "m.name AS mpa_name, " +
+                "m.id AS mpa_id, " +
+                "g.id as genre_id, " +
+                "g.name AS genre_name, " +
+                "d.id as director_id, " +
+                "d.name AS director_name " +
+                "FROM films f " +
+                "JOIN MPA_ratings AS m ON f.MPA_ID = m.ID " +
+                "LEFT JOIN films_genres AS fg ON f.id = fg.film_id " +
+                "LEFT JOIN genres AS g ON fg.genre_id = g.id " +
+                "LEFT JOIN films_directors AS fd ON f.id = fd.film_id " +
+                "LEFT JOIN directors AS d ON fd.director_id = d.id " +
+                "INNER JOIN films_likes fl ON fl.film_id = f.id " +
+                "WHERE fl.film_id=? AND fl.user_id=?";
+
+        List<Film> res = jdbcTemplate.query(sql, new FilmMapper(), filmId, userId);
+        return !res.isEmpty() ? res.get(0) : null;
+    }
+
 }

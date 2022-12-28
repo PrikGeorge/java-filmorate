@@ -67,4 +67,13 @@ public interface FilmStorage extends Storage<Film> {
      * @return List
      */
     List<Film> search(String query, String by);
+
+    /**
+     * Проверка наличия лайка
+     *
+     * @param filmId
+     * @param userId
+     * @return Film
+     */
+    Film checkLike(Long filmId, Long userId);
 }

@@ -40,6 +40,9 @@ public class FilmServiceImpl implements FilmService {
         Film film = validateFilmId(filmId);
         userService.findById(userId);
 
+        if (Objects.nonNull(storage.checkLike(filmId, userId))) {
+            return film;
+        }
         storage.addLike(filmId, userId);
         return film;
     }
