@@ -1,13 +1,17 @@
+
 package ru.yandex.practicum.filmorate.storage.user;
 
+import lombok.extern.slf4j.Slf4j;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.mapper.FilmMapper;
 import ru.yandex.practicum.filmorate.mapper.MapperConstants;
 import ru.yandex.practicum.filmorate.mapper.UserMapper;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.Date;
@@ -15,6 +19,9 @@ import java.sql.PreparedStatement;
 import java.sql.Types;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 /**
  * @project java-filmorate
@@ -22,6 +29,7 @@ import java.util.*;
  */
 
 @Repository
+@Slf4j
 public class UserDbStorage implements UserStorage {
 
     private final JdbcTemplate jdbcTemplate;
@@ -137,5 +145,44 @@ public class UserDbStorage implements UserStorage {
         return new HashSet<>(
                 jdbcTemplate.query(sql, (rs, num) -> rs.getLong("friend_id"), id)
         );
+    }
+
+    @Override
+    public List<Film> getRecommendation(Long id) {
+        List<Film> recommendations = new ArrayList<>();
+        String sqlQuery = "SELECT l2.user_id " +
+                "FROM films_likes AS l1 " +
+                "JOIN films_likes AS l2 " +
+                "ON l1.film_id = l2.film_id " +
+                "WHERE l1.user_id<>l2.user_id AND l1.user_id = ? " +
+                "GROUP BY l2.user_id " +
+                "ORDER BY COUNT(l2.user_id) DESC " +
+                "LIMIT 1";
+        List<Integer> userWithSameLikes = jdbcTemplate.queryForList(sqlQuery, Integer.class, id);
+        if (userWithSameLikes.size() != 1) {
+            return recommendations;
+        }
+        Integer userWithSameLikesId = userWithSameLikes.get(0);
+        if (userWithSameLikesId != null) {
+            String sqlQuery2 = "SELECT f.*, " +
+                    "m.name AS mpa_name, " +
+                    "m.id AS mpa_id, " +
+                    "g.id as genre_id, " +
+                    "g.name AS genre_name, " +
+                    "d.id as director_id, " +
+                    "d.name AS director_name " +
+                    "FROM FILMS AS f " +
+                    "JOIN MPA_ratings AS m ON f.MPA_ID = m.ID " +
+                    "LEFT JOIN films_genres AS fg ON f.id = fg.film_id " +
+                    "LEFT JOIN genres AS g ON fg.genre_id = g.id " +
+                    "LEFT JOIN films_directors AS fd ON f.id = fd.film_id " +
+                    "LEFT JOIN directors AS d ON fd.director_id = d.id " +
+                    "JOIN (SELECT fl.film_id FROM FILMS_LIKES AS fl WHERE user_id = ? " +
+                    "EXCEPT (SELECT fl.film_id FROM FILMS_LIKES AS fl  WHERE user_id = ?)) AS ex " +
+                    "ON f.id = ex.film_id";
+            recommendations = jdbcTemplate.query(sqlQuery2, new FilmMapper(), userWithSameLikesId, id);
+        }
+        return recommendations;
+
     }
 }

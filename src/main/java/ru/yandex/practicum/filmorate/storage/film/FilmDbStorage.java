@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -16,10 +17,9 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Types;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,6 +31,7 @@ import static java.util.Objects.isNull;
  */
 
 @Repository
+@Slf4j
 public class FilmDbStorage implements FilmStorage {
 
     private final JdbcTemplate jdbcTemplate;
@@ -241,6 +242,12 @@ public class FilmDbStorage implements FilmStorage {
         return jdbcTemplate.update(sql, filmId, userId) != 0;
     }
 
+    /*
+    @Override
+    public List<Film> getRecommendation(Long id) {
+    }
+
+     */
     @Override
     public List<Film> getCommonFilms(Long userId, Long friendId) {
         String sqlQuery = "SELECT f.*, " +
