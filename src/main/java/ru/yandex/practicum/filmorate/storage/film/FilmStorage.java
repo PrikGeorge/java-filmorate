@@ -15,10 +15,12 @@ public interface FilmStorage extends Storage<Film> {
     /**
      * Получение списка популярных фильмов
      *
-     * @param limit количество фильмов, которое нужно вернуть
+     * @param limit   количество фильмов, которое нужно вернуть
+     * @param genreId
+     * @param year
      * @return List
      */
-    List<Film> getMostPopularFilms(int limit);
+    List<Film> getMostPopularFilms(Integer limit, Integer genreId, Integer year);
 
     /**
      * Добавление лайка пользователя к фильму
@@ -38,13 +40,31 @@ public interface FilmStorage extends Storage<Film> {
      */
     boolean removeLike(Long filmId, Long userId);
 
-
     /**
-     * Получение рекмоендаций
+     * Получение списка общих с другом фильмов, отсортированных по популярности
      *
-     * @param id
+     * @param userId
+     * @param friendId
      * @return List
      */
+    List<Film> getCommonFilms(Long userId, Long friendId);
 
-   // List<Film> getRecommendation(Long id);
+    /**
+     * Возвращает список фильмов режиссера отсортированных
+     * по количеству лайков или году выпуска.
+     *
+     * @param directorId
+     * @param sortBy
+     * @return
+     */
+    List<Film> getFilmsByDirectors(String directorId, String sortBy);
+
+    /**
+     * Поиск по названию фильмов и по режиссёру
+     *
+     * @param query
+     * @param by
+     * @return List
+     */
+    List<Film> search(String query, String by);
 }

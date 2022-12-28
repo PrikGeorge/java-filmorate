@@ -53,7 +53,6 @@ public interface UserController extends Controllers<User> {
      */
     @GetMapping("/{id}/friends/common/{otherId}")
     List<User> getMutualFriends(@PathVariable(value = "id") Long id, @PathVariable(value = "otherId") Long otherId);
-
     /**
      * Получение рекомендаций
      *

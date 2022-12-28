@@ -70,6 +70,11 @@ public class UserControllerImpl implements UserController {
     public List<Film> getRecommendations(@PathVariable(value = "id") Long id) {
         return service.getRecommendations(id);
     }
+    @Override
+    public boolean remove(@PathVariable(value = "id") Long id) {
+        return service.remove(id);
+    }
+
 }
 
 

@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.service.user;
 
+import lombok.NonNull;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -85,4 +86,12 @@ public interface UserService {
      * @return List
      */
     List<Film> getRecommendations(Long id);
+
+    /**
+     *  Удаление пользователей
+     *
+     * @param id
+     * @return boolean
+     */
+    boolean remove(Long id);
 }
