@@ -4,6 +4,7 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.BadRequestException;
 import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.user.UserService;
@@ -21,6 +22,7 @@ import java.util.Objects;
 @Service
 public class FilmServiceImpl implements FilmService {
 
+    private static final int YEAR_FIRST_FILM = 1895;
     private final FilmStorage storage;
     private final UserService userService;
 
@@ -47,8 +49,20 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public List<Film> getMostPopularFilms(Integer limit) {
-        return storage.getMostPopularFilms(Objects.requireNonNullElse(limit, 10));
+    public List<Film> getMostPopularFilms(Integer limit, Integer genreId, Integer year) {
+
+        if (limit <= 0) {
+            throw new BadRequestException("Количество записей должно быть больше 0");
+        }
+
+        if (Objects.nonNull(genreId) && genreId <= 0) {
+            throw new BadRequestException("genreId должен быть больше 0");
+        }
+
+        if (Objects.nonNull(year) && year < YEAR_FIRST_FILM) {
+            throw new BadRequestException("Год должен быть не раньше года создания кино " + YEAR_FIRST_FILM);
+        }
+        return storage.getMostPopularFilms(limit, genreId, year);
     }
 
     @Override

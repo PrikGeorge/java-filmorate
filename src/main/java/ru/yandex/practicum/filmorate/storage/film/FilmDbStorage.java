@@ -176,7 +176,8 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     @Override
-    public List<Film> getMostPopularFilms(int limit) {
+    public List<Film> getMostPopularFilms(Integer limit, Integer genreId, Integer year) {
+
         String sql = "SELECT *, " +
                 "m.id AS mpa_id, " +
                 "m.name AS mpa_name, " +
@@ -195,10 +196,33 @@ public class FilmDbStorage implements FilmStorage {
                 "LEFT JOIN films_genres AS fg ON f.id = fg.film_id " +
                 "LEFT JOIN genres AS g ON fg.genre_id = g.id " +
                 "LEFT JOIN films_directors AS fd ON f.id = fd.film_id " +
-                "LEFT JOIN directors AS d ON fd.director_id = d.id " +
-                "ORDER BY l.likes_count ASC";
+                "LEFT JOIN directors AS d ON fd.director_id = d.id ";
 
-        List<Film> films = jdbcTemplate.query(sql, new FilmMapper());
+        String filterByGenre = "F.ID IN (SELECT DISTINCT FILM_ID FROM FILMS_GENRES WHERE GENRE_ID = ?) ";
+        String filterByYear = "YEAR(F.RELEASE_DATE) = ? ";
+        String orderBy = "ORDER BY L.LIKES_COUNT ASC ";
+        if (Objects.isNull(genreId) && Objects.isNull(year)) {
+            sql = sql + orderBy;
+        } else if (Objects.nonNull(genreId) && Objects.nonNull(year)) {
+            sql = sql + "WHERE " + filterByGenre + " AND " + filterByYear + orderBy;
+        } else if (Objects.nonNull(year)) {
+            sql = sql + "WHERE " + filterByYear + orderBy;
+        } else {
+            sql = sql + "WHERE " + filterByGenre + orderBy;
+        }
+
+        List<Film> films = jdbcTemplate.query(sql, ps -> {
+            int position = 1;
+            if (Objects.nonNull(genreId)) {
+                ps.setInt(position, genreId);
+                position++;
+            }
+            if (Objects.nonNull(year)) {
+                ps.setInt(position, year);
+                position++;
+            }
+        }, new FilmMapper());
+
         Collections.reverse(Objects.requireNonNull(films));
         return Objects.requireNonNull(films).stream().limit(limit).collect(Collectors.toList());
     }

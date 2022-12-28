@@ -15,10 +15,12 @@ public interface FilmStorage extends Storage<Film> {
     /**
      * Получение списка популярных фильмов
      *
-     * @param limit количество фильмов, которое нужно вернуть
+     * @param limit   количество фильмов, которое нужно вернуть
+     * @param genreId
+     * @param year
      * @return List
      */
-    List<Film> getMostPopularFilms(int limit);
+    List<Film> getMostPopularFilms(Integer limit, Integer genreId, Integer year);
 
     /**
      * Добавление лайка пользователя к фильму
