@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.mapper;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
@@ -36,12 +37,12 @@ public class FilmMapper implements ResultSetExtractor<List<Film>> {
                             .name(rs.getString(MapperConstants.MPA_NAME.lowerCaseName()))
                             .build())
                     .genres(new ArrayList<>())
+                    .directors(new ArrayList<>())
                     .build()
 
             );
 
             long genreId = rs.getLong(MapperConstants.GENRE_ID.lowerCaseName());
-
             if (genreId != 0) {
                 films.get(id).getGenres().add(
                         Genre.builder()
@@ -50,6 +51,17 @@ public class FilmMapper implements ResultSetExtractor<List<Film>> {
                                 .build()
                 );
             }
+
+            long directorId = rs.getLong(MapperConstants.DIRECTOR_ID.lowerCaseName());
+            if (directorId != 0) {
+                films.get(id).getDirectors().add(
+                        Director.builder()
+                                .id(directorId)
+                                .name(rs.getString(MapperConstants.DIRECTOR_NAME.lowerCaseName()))
+                                .build()
+                );
+            }
+
         }
 
         return new ArrayList<>(films.values());

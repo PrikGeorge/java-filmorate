@@ -67,4 +67,14 @@ public interface FilmService {
      * @return Film
      */
     Film create(Film film);
+
+    /**
+     * Возвращает список фильмов режиссера отсортированных
+     * по количеству лайков или году выпуска
+     *
+     * @param directorId
+     * @param sortBy
+     * @return
+     */
+    List<Film> getFilmsByDirectors(String directorId, String sortBy);
 }
