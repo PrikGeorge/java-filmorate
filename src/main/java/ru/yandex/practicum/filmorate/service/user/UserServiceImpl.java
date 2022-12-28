@@ -5,7 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.ArrayList;
@@ -22,10 +24,12 @@ import java.util.Objects;
 public class UserServiceImpl implements UserService {
 
     private final UserStorage storage;
+    private final FilmStorage filmStorage;
 
     @Autowired
-    public UserServiceImpl(UserStorage storage) {
+    public UserServiceImpl(UserStorage storage, FilmStorage filmStorage) {
         this.storage = storage;
+        this.filmStorage = filmStorage;
     }
 
     @Override
@@ -58,6 +62,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getFriends(Long id) {
+        validateUserId(id);
         return storage.getFriends(id);
     }
 
@@ -93,10 +98,22 @@ public class UserServiceImpl implements UserService {
         return storage.create(user);
     }
 
+    @Override
+    public boolean remove(@NonNull Long id) {
+        validateUserId(id);
+        return storage.remove(id);
+    }
+
     private User validateUserId(Long id) {
         return storage.findById(id).orElseThrow(() -> {
             log.info("Ошибка при валидации пользователя.");
             throw new EntityNotFoundException("Пользователь с id=" + id + " не найден.");
         });
+    }
+
+    @Override
+    public List<Film> getRecommendations(@NonNull Long id) {
+        validateUserId(id);
+        return storage.getRecommendation(id);
     }
 }

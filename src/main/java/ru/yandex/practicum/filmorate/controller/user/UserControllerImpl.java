@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.user.UserService;
 
@@ -63,6 +64,15 @@ public class UserControllerImpl implements UserController {
     @Override
     public List<User> getMutualFriends(@PathVariable(value = "id") Long id, @PathVariable(value = "otherId") Long otherId) {
         return service.getMutualFriends(id, otherId);
+    }
+
+    @Override
+    public List<Film> getRecommendations(@PathVariable(value = "id") Long id) {
+        return service.getRecommendations(id);
+    }
+    @Override
+    public boolean remove(@PathVariable(value = "id") Long id) {
+        return service.remove(id);
     }
 
 }
