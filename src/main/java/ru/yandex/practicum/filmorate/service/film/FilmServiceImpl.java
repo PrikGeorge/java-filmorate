@@ -4,6 +4,8 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.aop.feed.AddEvent;
+import ru.yandex.practicum.filmorate.aop.feed.RemoveEvent;
 import ru.yandex.practicum.filmorate.exception.BadRequestException;
 import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -33,19 +35,23 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public boolean addLike(Long filmId, Long userId) {
-        validateFilmId(filmId);
+    @AddEvent
+    public Film addLike(Long filmId, Long userId) {
+        Film film = validateFilmId(filmId);
         userService.findById(userId);
 
-        return storage.addLike(filmId, userId);
+        storage.addLike(filmId, userId);
+        return film;
     }
 
     @Override
-    public boolean removeLike(Long filmId, Long userId) {
-        validateFilmId(filmId);
+    @RemoveEvent
+    public Film removeLike(Long filmId, Long userId) {
+        Film film = validateFilmId(filmId);
         userService.findById(userId);
 
-        return storage.removeLike(filmId, userId);
+        storage.removeLike(filmId, userId);
+        return film;
     }
 
     @Override

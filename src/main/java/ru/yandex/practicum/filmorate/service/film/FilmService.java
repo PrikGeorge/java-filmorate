@@ -18,7 +18,7 @@ public interface FilmService {
      * @param userId
      * @return boolean
      */
-    boolean addLike(Long filmId, Long userId);
+    Film addLike(Long filmId, Long userId);
 
     /**
      * Удаление лайка пользователя у фильма
@@ -27,7 +27,7 @@ public interface FilmService {
      * @param userId
      * @return boolean
      */
-    boolean removeLike(Long filmId, Long userId);
+    Film removeLike(Long filmId, Long userId);
 
     /**
      * Получение списка популярных фильмов
@@ -87,7 +87,7 @@ public interface FilmService {
      */
     boolean remove(Long id);
 
-     /**
+    /**
      * Возвращает список фильмов режиссера отсортированных
      * по количеству лайков или году выпуска
      *

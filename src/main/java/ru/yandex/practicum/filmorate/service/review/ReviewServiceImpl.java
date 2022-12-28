@@ -3,6 +3,9 @@ package ru.yandex.practicum.filmorate.service.review;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.aop.feed.AddEvent;
+import ru.yandex.practicum.filmorate.aop.feed.RemoveEvent;
+import ru.yandex.practicum.filmorate.aop.feed.UpdateEvent;
 import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.model.Review;
 import ru.yandex.practicum.filmorate.service.film.FilmService;
@@ -28,6 +31,7 @@ public class ReviewServiceImpl implements ReviewService {
 
 
     @Override
+    @AddEvent
     public Review create(Review review) {
         userService.findById(review.getUserId());
         filmService.findById(review.getFilmId());
@@ -35,6 +39,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @UpdateEvent
     public Review update(Review review) {
         userService.findById(review.getUserId());
         filmService.findById(review.getFilmId());
@@ -50,9 +55,12 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public boolean deleteReview(Long id) {
-        validateReviewId(id);
-        return storage.deleteReview(id);
+    @RemoveEvent
+    public Review deleteReview(Long id) {
+        Review review = validateReviewId(id);
+        storage.deleteReview(id);
+
+        return review;
     }
 
     @Override
