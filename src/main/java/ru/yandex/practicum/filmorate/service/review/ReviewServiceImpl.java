@@ -56,8 +56,8 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<Review> getByFilmId(Long filmId, Integer count) {
-        return storage.getByFilmId(filmId, count);
+    public List<Review> getReviews(Long filmId, Integer count) {
+        return storage.getReviews(filmId, count);
     }
 
     @Override
@@ -68,36 +68,24 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public boolean addDisLike(Long id, Long userId) {
+    public boolean addDislike(Long id, Long userId) {
         validateReviewId(id);
         userService.findById(userId);
-        return storage.addDisLike(id, userId);
+        return storage.addDislike(id, userId);
     }
 
     @Override
     public boolean removeLike(Long id, Long userId) {
         validateReviewId(id);
         userService.findById(userId);
-        boolean result = storage.removeLike(id, userId);
-        if (result) {
-            return result;
-        } else {
-            log.info("Ошибка при удалении лайка с отзыва.");
-            throw new EntityNotFoundException("Ошибка при удалении лайка с отзыва id=" + id);
-        }
+        return storage.removeLike(id, userId);
     }
 
     @Override
-    public boolean removeDisLike(Long id, Long userId) {
+    public boolean removeDislike(Long id, Long userId) {
         validateReviewId(id);
         userService.findById(userId);
-        boolean result = storage.removeDisLike(id, userId);
-        if (result) {
-            return result;
-        } else {
-            log.info("Ошибка при удалении дизлайка с отзыва.");
-            throw new EntityNotFoundException("Ошибка при удалении дизлайка с отзыва id=" + id);
-        }
+        return storage.removeDislike(id, userId);
     }
 
     private Review validateReviewId(Long id) {

@@ -13,13 +13,13 @@ public interface ReviewService {
 
     boolean deleteReview(Long id);
 
-    List<Review> getByFilmId(Long filmId, Integer count);
+    List<Review> getReviews(Long filmId, Integer count);
 
     boolean addLike(Long id, Long userId);
 
-    boolean addDisLike(Long id, Long userId);
+    boolean addDislike(Long id, Long userId);
 
     boolean removeLike(Long id, Long userId);
 
-    boolean removeDisLike(Long id, Long userId);
+    boolean removeDislike(Long id, Long userId);
 }

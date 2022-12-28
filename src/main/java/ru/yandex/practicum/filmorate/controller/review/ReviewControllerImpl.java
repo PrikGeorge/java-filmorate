@@ -43,8 +43,8 @@ public class ReviewControllerImpl implements ReviewController {
 
 
     @Override
-    public List<Review> getByFilmId(@RequestParam(required = false) Long filmId, @RequestParam(defaultValue = "10", required = false) Integer count) {
-        return service.getByFilmId(filmId, count);
+    public List<Review> getReviews(@RequestParam(required = false) Long filmId, @RequestParam(defaultValue = "10", required = false) Integer count) {
+        return service.getReviews(filmId, count);
     }
 
 
@@ -54,8 +54,8 @@ public class ReviewControllerImpl implements ReviewController {
     }
 
     @Override
-    public boolean addDisLike(@PathVariable(value = "id") Long id, @PathVariable(value = "userId") Long userId) {
-        return service.addDisLike(id, userId);
+    public boolean addDislike(@PathVariable(value = "id") Long id, @PathVariable(value = "userId") Long userId) {
+        return service.addDislike(id, userId);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class ReviewControllerImpl implements ReviewController {
     }
 
     @Override
-    public boolean removeDisLike(@PathVariable(value = "id") Long id, @PathVariable(value = "userId") Long userId) {
-        return service.removeDisLike(id, userId);
+    public boolean removeDislike(@PathVariable(value = "id") Long id, @PathVariable(value = "userId") Long userId) {
+        return service.removeDislike(id, userId);
     }
 }

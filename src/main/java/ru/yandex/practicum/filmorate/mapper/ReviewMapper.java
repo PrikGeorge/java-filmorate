@@ -15,7 +15,7 @@ public class ReviewMapper implements RowMapper<Review> {
                 .filmId(rs.getLong(MapperConstants.FILM_ID.lowerCaseName()))
                 .userId(rs.getLong(MapperConstants.USER_ID.lowerCaseName()))
                 .content(rs.getString(MapperConstants.CONTENT.lowerCaseName()))
-                .isPositive(rs.getBoolean(MapperConstants.ISPOSITIVE.lowerCaseName()))
+                .isPositive(rs.getBoolean(MapperConstants.IS_POSITIVE.lowerCaseName()))
                 .useful(rs.getInt(MapperConstants.USEFUL.lowerCaseName()))
                 .build();
     }

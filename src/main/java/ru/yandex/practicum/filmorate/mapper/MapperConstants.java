@@ -17,7 +17,7 @@ public enum MapperConstants {
     FILM_ID("film_id"),
     USER_ID("user_id"),
     CONTENT("content"),
-    ISPOSITIVE("ispositive"),
+    IS_POSITIVE("is_positive"),
     USEFUL("useful");
 
     private final String lowerCaseName;

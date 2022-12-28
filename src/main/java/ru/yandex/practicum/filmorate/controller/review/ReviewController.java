@@ -27,7 +27,7 @@ public interface ReviewController {
 
     //Получение всех отзывов по идентификатору фильма, если фильм не указан, то все. Если кол-во не указано то 10.
     @GetMapping
-    List<Review> getByFilmId(@RequestParam(required = false) Long filmId, @RequestParam(defaultValue = "10", required = false) Integer count);
+    List<Review> getReviews(@RequestParam(required = false) Long filmId, @RequestParam(defaultValue = "10", required = false) Integer count);
 
     //Пользователь ставит лайк отзыву
     @PutMapping("/{id}/like/{userId}")
@@ -35,7 +35,7 @@ public interface ReviewController {
 
     //Пользователь ставит дизлайк отзыву
     @PutMapping("/{id}/dislike/{userId}")
-    boolean addDisLike(@PathVariable(value = "id") Long id, @PathVariable(value = "userId") Long userId);
+    boolean addDislike(@PathVariable(value = "id") Long id, @PathVariable(value = "userId") Long userId);
 
     //Пользователь удаляет лайк отзыву
     @DeleteMapping("/{id}/like/{userId}")
@@ -43,5 +43,5 @@ public interface ReviewController {
 
     //Пользователь удаляет дизлайк отзыву
     @DeleteMapping("/{id}/dislike/{userId}")
-    boolean removeDisLike(@PathVariable(value = "id") Long id, @PathVariable(value = "userId") Long userId);
+    boolean removeDislike(@PathVariable(value = "id") Long id, @PathVariable(value = "userId") Long userId);
 }
