@@ -1,8 +1,10 @@
 package ru.yandex.practicum.filmorate.model;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -14,26 +16,27 @@ import javax.validation.constraints.Size;
 
 @Getter
 @Builder
+@FieldDefaults(level= AccessLevel.PRIVATE)
 public class Event {
 
     @Setter
     @NotNull
-    private Long eventId;
+    Long eventId;
 
     @NotNull
-    private Long userId;
+    Long userId;
 
     @NotNull
-    private Long entityId;
-
-    @NotNull
-    @Size(max = 10)
-    private EventType eventType;
+    Long entityId;
 
     @NotNull
     @Size(max = 10)
-    private Operation operation;
+    EventType eventType;
 
     @NotNull
-    private Long timestamp;
+    @Size(max = 10)
+    Operation operation;
+
+    @NotNull
+    Long timestamp;
 }

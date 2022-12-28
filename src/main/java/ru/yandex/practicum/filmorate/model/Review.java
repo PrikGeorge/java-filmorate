@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 
 import javax.validation.constraints.NotNull;
@@ -9,28 +10,29 @@ import javax.validation.constraints.NotNull;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level= AccessLevel.PRIVATE)
 public class Review {
     @NonFinal
     @Setter
-    private Long reviewId;
+    Long reviewId;
 
     @NotNull
-    private Long userId;
+    Long userId;
 
     @NotNull
-    private Long filmId;
+    Long filmId;
 
     @NonFinal
     @Setter
     @NotNull
-    private String content;
+    String content;
 
     @NonFinal
     @Setter
     @NotNull
-    private Boolean isPositive;
+    Boolean isPositive;
 
     @NonFinal
     @Setter
-    private Integer useful;
+    Integer useful;
 }

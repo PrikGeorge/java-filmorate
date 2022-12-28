@@ -1,14 +1,10 @@
 package ru.yandex.practicum.filmorate.controller.film;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.film.FilmService;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,12 +24,12 @@ public class FilmControllerImpl implements FilmController {
     }
 
     @Override
-    public Film create(@Valid @RequestBody Film film) {
+    public Film create(Film film) {
         return service.create(film);
     }
 
     @Override
-    public Film update(@Valid @RequestBody Film film) {
+    public Film update(Film film) {
         return service.update(film);
     }
 
@@ -43,46 +39,42 @@ public class FilmControllerImpl implements FilmController {
     }
 
     @Override
-    public Film findById(@PathVariable(value = "id") Long id) {
+    public Film findById(Long id) {
         return service.findById(id);
     }
 
     @Override
-    public boolean addLike(@PathVariable(value = "id") Long id, @PathVariable(value = "userId") Long userId) {
+    public boolean addLike(Long id, Long userId) {
         return Objects.nonNull(service.addLike(id, userId));
     }
 
     @Override
-    public boolean removeLike(@PathVariable(value = "id") Long id, @PathVariable(value = "userId") Long userId) {
+    public boolean removeLike(Long id, Long userId) {
         return Objects.nonNull(service.removeLike(id, userId));
     }
 
     @Override
-    public List<Film> getPopular(
-            @RequestParam(required = false, defaultValue = "10") Integer count,
-            @RequestParam(required = false) Integer genreId,
-            @RequestParam(required = false) Integer year) {
+    public List<Film> getPopular(Integer count, Integer genreId, Integer year) {
         return service.getMostPopularFilms(count, genreId, year);
     }
 
     @Override
-    public List<Film> getCommonFilms(@RequestParam(value = "userId") Long userId, @RequestParam(value = "friendId") Long friendId) {
+    public List<Film> getCommonFilms(Long userId, Long friendId) {
         return service.getCommonFilms(userId, friendId);
     }
 
     @Override
-    public boolean remove(@PathVariable(value = "id") Long id) {
+    public boolean remove(Long id) {
         return service.remove(id);
     }
 
     @Override
-    public List<Film> getFilmsByDirectors(@PathVariable String directorId,
-                                          @RequestParam(required = false, defaultValue = "year") String sortBy) {
+    public List<Film> getFilmsByDirectors(String directorId, String sortBy) {
         return service.getFilmsByDirectors(directorId, sortBy);
     }
 
     @Override
-    public List<Film> search(@RequestParam() String query, @RequestParam() String by) {
+    public List<Film> search(String query, String by) {
         return service.search(query, by);
     }
 

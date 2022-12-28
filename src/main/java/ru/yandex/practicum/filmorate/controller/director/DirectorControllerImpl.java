@@ -1,13 +1,10 @@
 package ru.yandex.practicum.filmorate.controller.director;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.service.director.DirectorService;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -26,12 +23,12 @@ public class DirectorControllerImpl implements DirectorController {
     }
 
     @Override
-    public Director create(@Valid @RequestBody Director director) {
+    public Director create(Director director) {
         return service.create(director);
     }
 
     @Override
-    public Director update(@Valid @RequestBody Director director) {
+    public Director update(Director director) {
         return service.update(director);
     }
 
@@ -41,12 +38,12 @@ public class DirectorControllerImpl implements DirectorController {
     }
 
     @Override
-    public Director findById(@PathVariable(value = "id") Long id) {
+    public Director findById(Long id) {
         return service.findById(id);
     }
 
     @Override
-    public boolean remove(@PathVariable(value = "id") Long id) {
+    public boolean remove(Long id) {
         return service.remove(id);
     }
 
