@@ -2,6 +2,8 @@ package ru.yandex.practicum.filmorate.controller.user;
 
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.controller.Controllers;
+import ru.yandex.practicum.filmorate.model.Event;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.List;
@@ -53,4 +55,21 @@ public interface UserController extends Controllers<User> {
     @GetMapping("/{id}/friends/common/{otherId}")
     List<User> getMutualFriends(@PathVariable(value = "id") Long id, @PathVariable(value = "otherId") Long otherId);
 
+    /**
+     * Получение рекомендаций
+     *
+     * @param id
+     * @return List
+     */
+    @GetMapping("/{id}/recommendations")
+    List<Film> getRecommendations(@PathVariable(value = "id") Long id);
+
+    /**
+     * Просмотр последних событий
+     *
+     * @param id
+     * @return List
+     */
+    @GetMapping("/{id}/feed")
+    List<Event> getFeed(@PathVariable(value = "id") Long id);
 }

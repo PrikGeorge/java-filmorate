@@ -1,14 +1,14 @@
 package ru.yandex.practicum.filmorate.controller.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import ru.yandex.practicum.filmorate.model.Event;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.user.UserService;
 
-import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @project java-filmorate
@@ -26,12 +26,12 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public User create(@Valid @RequestBody User user) {
+    public User create(User user) {
         return service.create(user);
     }
 
     @Override
-    public User update(@Valid @RequestBody User user) {
+    public User update(User user) {
         return service.update(user);
     }
 
@@ -41,28 +41,43 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public User findById(@PathVariable(value = "id") Long id) {
+    public User findById(Long id) {
         return service.findById(id);
     }
 
     @Override
-    public boolean addFriend(@PathVariable(value = "id") Long id, @PathVariable(value = "friendId") Long friendId) {
-        return service.addFriend(id, friendId);
+    public boolean addFriend(Long id, Long friendId) {
+        return Objects.nonNull(service.addFriend(id, friendId));
     }
 
     @Override
-    public boolean deleteFriend(@PathVariable(value = "id") Long id, @PathVariable(value = "friendId") Long friendId) {
-        return service.deleteFriend(id, friendId);
+    public boolean deleteFriend(Long id, Long friendId) {
+        return Objects.nonNull(service.deleteFriend(id, friendId));
     }
 
     @Override
-    public List<User> getFriends(@PathVariable(value = "id") Long id) {
+    public List<User> getFriends(Long id) {
         return service.getFriends(id);
     }
 
     @Override
-    public List<User> getMutualFriends(@PathVariable(value = "id") Long id, @PathVariable(value = "otherId") Long otherId) {
+    public List<User> getMutualFriends(Long id, Long otherId) {
         return service.getMutualFriends(id, otherId);
+    }
+
+    @Override
+    public List<Film> getRecommendations(Long id) {
+        return service.getRecommendations(id);
+    }
+
+    @Override
+    public boolean remove(Long id) {
+        return service.remove(id);
+    }
+
+    @Override
+    public List<Event> getFeed(Long id) {
+        return service.getFeed(id);
     }
 
 }

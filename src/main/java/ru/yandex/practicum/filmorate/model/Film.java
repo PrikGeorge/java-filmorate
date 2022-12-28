@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import ru.yandex.practicum.filmorate.annotation.ReleaseDateValidation;
 
@@ -23,35 +24,40 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level= AccessLevel.PRIVATE)
 public class Film {
 
     @NonFinal
     @Setter
-    private Long id;
+    Long id;
 
     @NotBlank
     @Size(max = 50)
-    private String name;
+    String name;
 
     @NotBlank
     @Size(max = 200)
-    private String description;
+    String description;
 
     @ReleaseDateValidation(message = "Неверная дата создания фильма", dateStart = "1895.12.28")
-    private LocalDate releaseDate;
+    LocalDate releaseDate;
 
     @Positive
-    private int duration;
+    int duration;
 
     @NonFinal
     @Setter
-    private Set<Long> likes = new HashSet<>();
+    Set<Long> likes = new HashSet<>();
 
     @NonFinal
     @Setter
-    private List<Genre> genres = new ArrayList<>();
+    List<Genre> genres = new ArrayList<>();
 
     @NotNull
-    private Mpa mpa;
+    Mpa mpa;
+
+    @NonFinal
+    @Setter
+    List<Director> directors = new ArrayList<>();
 
 }

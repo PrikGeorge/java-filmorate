@@ -4,12 +4,14 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.aop.feed.AddEvent;
+import ru.yandex.practicum.filmorate.aop.feed.RemoveEvent;
+import ru.yandex.practicum.filmorate.exception.BadRequestException;
 import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.user.UserService;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,7 +24,7 @@ import java.util.Objects;
 @Service
 public class FilmServiceImpl implements FilmService {
 
-    public static final Comparator<Film> COMPARATOR_LIKES = (curFilm, nextFilm) -> nextFilm.getLikes().size() - curFilm.getLikes().size();
+    private static final int YEAR_FIRST_FILM = 1895;
     private final FilmStorage storage;
     private final UserService userService;
 
@@ -33,24 +35,43 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public boolean addLike(Long filmId, Long userId) {
-        validateFilmId(filmId);
+    @AddEvent
+    public Film addLike(Long filmId, Long userId) {
+        Film film = validateFilmId(filmId);
         userService.findById(userId);
 
-        return storage.addLike(filmId, userId);
+        if (Objects.nonNull(storage.checkLike(filmId, userId))) {
+            return film;
+        }
+        storage.addLike(filmId, userId);
+        return film;
     }
 
     @Override
-    public boolean removeLike(Long filmId, Long userId) {
-        validateFilmId(filmId);
+    @RemoveEvent
+    public Film removeLike(Long filmId, Long userId) {
+        Film film = validateFilmId(filmId);
         userService.findById(userId);
 
-        return storage.removeLike(filmId, userId);
+        storage.removeLike(filmId, userId);
+        return film;
     }
 
     @Override
-    public List<Film> getMostPopularFilms(Integer limit) {
-        return storage.getMostPopularFilms(Objects.requireNonNullElse(limit, 10));
+    public List<Film> getMostPopularFilms(Integer limit, Integer genreId, Integer year) {
+
+        if (limit <= 0) {
+            throw new BadRequestException("Количество записей должно быть больше 0");
+        }
+
+        if (Objects.nonNull(genreId) && genreId <= 0) {
+            throw new BadRequestException("genreId должен быть больше 0");
+        }
+
+        if (Objects.nonNull(year) && year < YEAR_FIRST_FILM) {
+            throw new BadRequestException("Год должен быть не раньше года создания кино " + YEAR_FIRST_FILM);
+        }
+        return storage.getMostPopularFilms(limit, genreId, year);
     }
 
     @Override
@@ -77,8 +98,20 @@ public class FilmServiceImpl implements FilmService {
         if (Objects.nonNull(film.getId())) {
             validateFilmId(film.getId());
         }
-
         return storage.create(film);
+    }
+
+    @Override
+    public List<Film> getCommonFilms(Long userId, Long friendId) {
+        userService.findById(userId);
+        userService.findById(friendId);
+        return storage.getCommonFilms(userId, friendId);
+    }
+
+    @Override
+    public boolean remove(@NonNull Long id) {
+        validateFilmId(id);
+        return storage.remove(id);
     }
 
     private Film validateFilmId(Long id) {
@@ -86,6 +119,22 @@ public class FilmServiceImpl implements FilmService {
             log.info("Ошибка при валидации фильма.");
             throw new EntityNotFoundException("Фильм с id=" + id + " не найден");
         });
+    }
+
+    @Override
+    public List<Film> getFilmsByDirectors(String directorId, String sortBy) {
+        List<Film> films = storage.getFilmsByDirectors(directorId, sortBy);
+        if (films.isEmpty()) {
+            log.info("Фильмы с таким режисером не найдены.");
+            throw new EntityNotFoundException("Фильмы с таким режисером не найдены.");
+        }
+
+        return films;
+    }
+
+    @Override
+    public List<Film> search(String query, String by) {
+        return storage.search(query, by);
     }
 
 }

@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.controller.mpa;
 
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.service.mpa.MpaService;
@@ -27,7 +26,7 @@ public class MPAControllerImpl implements MPAController {
     }
 
     @Override
-    public Mpa findById(@PathVariable Long id) {
+    public Mpa findById(Long id) {
         return service.findById(id);
     }
 }

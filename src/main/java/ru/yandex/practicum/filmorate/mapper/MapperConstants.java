@@ -11,9 +11,22 @@ public enum MapperConstants {
     MPA_NAME("mpa_name"),
     GENRE_ID("genre_id"),
     GENRE_NAME("genre_name"),
+    DIRECTOR_ID("director_id"),
+    DIRECTOR_NAME("director_name"),
     EMAIL("email"),
     LOGIN("login"),
-    BIRTHDAY("birthday");
+    BIRTHDAY("birthday"),
+    FILM_ID("film_id"),
+    USER_ID("user_id"),
+    CONTENT("content"),
+    IS_POSITIVE("is_positive"),
+    USEFUL("useful"),
+    EVENT_ID("event_id"),
+    ENTITY_ID("entity_id"),
+    EVENT_TYPE("event_type"),
+    OPERATION("operation"),
+    TIMESTAMP("timestamp");
+
     private final String lowerCaseName;
 
     MapperConstants(String lowerCaseName) {

@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 
 import javax.validation.constraints.*;
@@ -17,31 +18,32 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level= AccessLevel.PRIVATE)
 public class User {
 
     @NonFinal
     @Setter
-    private Long id;
+    Long id;
 
     @Email
     @NotBlank
     @Size(max = 50)
-    private String email;
+    String email;
 
     @NotBlank
     @Pattern(regexp = "\\S*$")
     @Size(max = 50)
-    private String login;
+    String login;
 
     @NonFinal
     @Size(max = 50)
     @Setter
-    private String name;
+    String name;
 
     @Past
-    private LocalDate birthday;
+    LocalDate birthday;
 
     @NonFinal
     @Setter
-    private Set<Long> friends = new HashSet<>();
+    Set<Long> friends = new HashSet<>();
 }

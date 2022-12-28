@@ -18,7 +18,7 @@ public interface FilmService {
      * @param userId
      * @return boolean
      */
-    boolean addLike(Long filmId, Long userId);
+    Film addLike(Long filmId, Long userId);
 
     /**
      * Удаление лайка пользователя у фильма
@@ -27,15 +27,17 @@ public interface FilmService {
      * @param userId
      * @return boolean
      */
-    boolean removeLike(Long filmId, Long userId);
+    Film removeLike(Long filmId, Long userId);
 
     /**
      * Получение списка популярных фильмов
      *
-     * @param limit количество фильмов, которое нужно вернуть
+     * @param limit   количество фильмов, которое нужно вернуть
+     * @param genreId
+     * @param year
      * @return List
      */
-    List<Film> getMostPopularFilms(Integer limit);
+    List<Film> getMostPopularFilms(Integer limit, Integer genreId, Integer year);
 
     /**
      * Поиск фильма по id
@@ -67,4 +69,40 @@ public interface FilmService {
      * @return Film
      */
     Film create(Film film);
+
+    /**
+     * Получение списка общих с другом фильмов, отсортированных по популярности
+     *
+     * @param userId
+     * @param friendId
+     * @return List
+     */
+    List<Film> getCommonFilms(Long userId, Long friendId);
+
+    /**
+     * Удаление фильма
+     *
+     * @param id
+     * @return boolean
+     */
+    boolean remove(Long id);
+
+    /**
+     * Возвращает список фильмов режиссера отсортированных
+     * по количеству лайков или году выпуска
+     *
+     * @param directorId
+     * @param sortBy
+     * @return
+     */
+    List<Film> getFilmsByDirectors(String directorId, String sortBy);
+
+    /**
+     * Поиск по названию фильмов и по режиссёру
+     *
+     * @param query
+     * @param by
+     * @return List
+     */
+    List<Film> search(String query, String by);
 }

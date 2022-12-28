@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.controller.genre;
 
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.service.genre.GenreService;
@@ -27,7 +26,7 @@ public class GenreControllerImpl implements GenreController {
     }
 
     @Override
-    public Genre findById(@PathVariable Long id) {
+    public Genre findById(Long id) {
         return service.findById(id);
     }
 }
