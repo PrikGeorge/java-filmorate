@@ -9,7 +9,6 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.user.UserService;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,7 +21,6 @@ import java.util.Objects;
 @Service
 public class FilmServiceImpl implements FilmService {
 
-    public static final Comparator<Film> COMPARATOR_LIKES = (curFilm, nextFilm) -> nextFilm.getLikes().size() - curFilm.getLikes().size();
     private final FilmStorage storage;
     private final UserService userService;
 
@@ -77,7 +75,6 @@ public class FilmServiceImpl implements FilmService {
         if (Objects.nonNull(film.getId())) {
             validateFilmId(film.getId());
         }
-
         return storage.create(film);
     }
 
@@ -88,11 +85,33 @@ public class FilmServiceImpl implements FilmService {
         return storage.getCommonFilms(userId, friendId);
     }
 
+    @Override
+    public boolean remove(@NonNull Long id) {
+        validateFilmId(id);
+        return storage.remove(id);
+    }
+
     private Film validateFilmId(Long id) {
         return storage.findById(id).orElseThrow(() -> {
             log.info("Ошибка при валидации фильма.");
             throw new EntityNotFoundException("Фильм с id=" + id + " не найден");
         });
+    }
+
+    @Override
+    public List<Film> getFilmsByDirectors(String directorId, String sortBy) {
+        List<Film> films = storage.getFilmsByDirectors(directorId, sortBy);
+        if (films.isEmpty()) {
+            log.info("Фильмы с таким режисером не найдены.");
+            throw new EntityNotFoundException("Фильмы с таким режисером не найдены.");
+        }
+
+        return films;
+    }
+
+    @Override
+    public List<Film> search(String query, String by) {
+        return storage.search(query, by);
     }
 
 }

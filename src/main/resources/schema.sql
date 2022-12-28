@@ -5,6 +5,11 @@ DROP TABLE IF EXISTS user_friends CASCADE;
 DROP TABLE IF EXISTS films_likes CASCADE;
 DROP TABLE IF EXISTS genres CASCADE;
 DROP TABLE IF EXISTS MPA_ratings CASCADE;
+DROP TABLE IF EXISTS reviews CASCADE;
+DROP TABLE IF EXISTS reviews_likes CASCADE;
+
+DROP TABLE IF EXISTS directors CASCADE;
+DROP TABLE IF EXISTS films_directors CASCADE;
 
 CREATE TABLE IF NOT EXISTS genres
 (
@@ -62,3 +67,35 @@ CREATE TABLE IF NOT EXISTS films_likes
     user_id LONG REFERENCES users (id) ON DELETE CASCADE,
     PRIMARY KEY (user_id, film_id)
 );
+
+CREATE TABLE IF NOT EXISTS reviews
+(
+    id            LONG auto_increment PRIMARY KEY,
+    film_id       LONG REFERENCES films (id) ON DELETE CASCADE,
+    user_id       LONG REFERENCES users (id) ON DELETE CASCADE,
+    content       TEXT NOT NULL,
+    is_positive    BOOLEAN NOT NULL DEFAULT 0,
+    useful        INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS reviews_likes
+(
+    review_id     LONG REFERENCES reviews (id) ON DELETE CASCADE,
+    user_id       LONG REFERENCES users (id) ON DELETE CASCADE,
+    is_positive    BOOLEAN NOT NULL DEFAULT 0,
+    PRIMARY KEY (user_id, review_id)
+);
+
+CREATE TABLE IF NOT EXISTS directors
+(
+    id LONG auto_increment PRIMARY KEY,
+    name VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS films_directors
+(
+    director_id LONG REFERENCES directors(id) ON DELETE CASCADE,
+    film_id LONG REFERENCES films(id) ON DELETE CASCADE,
+    PRIMARY KEY(film_id,director_id)
+);
+

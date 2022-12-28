@@ -46,4 +46,23 @@ public interface FilmStorage extends Storage<Film> {
      * @return List
      */
     List<Film> getCommonFilms(Long userId, Long friendId);
+
+    /**
+     * Возвращает список фильмов режиссера отсортированных
+     * по количеству лайков или году выпуска.
+     *
+     * @param directorId
+     * @param sortBy
+     * @return
+     */
+    List<Film> getFilmsByDirectors(String directorId, String sortBy);
+
+    /**
+     * Поиск по названию фильмов и по режиссёру
+     *
+     * @param query
+     * @param by
+     * @return List
+     */
+    List<Film> search(String query, String by);
 }

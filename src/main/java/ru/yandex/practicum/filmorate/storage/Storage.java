@@ -45,4 +45,14 @@ public interface Storage<T> {
      */
     Optional<T> findById(Long id);
 
+    /**
+     * Удаление объекта по id
+     *
+     * @param id
+     * @return boolean
+     */
+    default boolean remove(Long id) {
+        throw new UnsupportedOperationException("Метод удаления объекта не реализован.");
+    }
+
 }
