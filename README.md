@@ -1,4 +1,13 @@
-![192549477-7d00fd78-97d4-43e2-b038-4b4f1bf104bd](https://user-images.githubusercontent.com/107940914/203314162-df796574-3fe1-4674-b62a-8f44a2dbe208.png)
+![Untitled (1)](https://user-images.githubusercontent.com/102664845/194965004-691c041f-8b13-43c3-9173-a2bf8421bc5a.png)
+
+В рамках группового проекта были решены таски: 
+- Функциональность «Лента событий» (ветка: add-feed)
+- Добавление режиссёров в фильмы (ветка: add-director)
+- Функциональность «Рекомендации» (ветка: add-recommendations)
+- Функциональность  «Отзывы» (ветка: add-reviews)
+- Удаление фильмов и пользователей (ветка: add-remove-endpoint)
+- Функциональность «Общие фильмы» (ветка: add-common-films)
+- Вывод самых популярных фильмов по жанру и годам (ветка: add-most-populars)
 
 Список всех фильмов:
   SELECT * FROM films;
