@@ -138,48 +138,40 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public List<Film> getRecommendation(Long id) {
-        List<User> users = getAll().stream().filter(user -> !Objects.equals(user.getId(), id)).collect(Collectors.toList());
-        log.info("users" + users);
-        String sql = "SELECT film_id AS id " +
-                "FROM films_likes " +
-                "WHERE film_id IN (SELECT FILM_ID " +
-                "FROM films_likes " +
-                "WHERE user_id = ?) " +
-                "AND user_id = ?";
-        AtomicInteger max = new AtomicInteger(0);
-        AtomicLong userWithCommonFilms = new AtomicLong();
-        users.forEach(user -> {
-            List<Long> commonFilms = jdbcTemplate.query(sql, (rs, num) -> rs.getLong("id"), id, user.getId());
-            if (commonFilms.size() > max.get()) {
-                max.set(commonFilms.size());
-                userWithCommonFilms.set(user.getId());
-            }
-        });
-        log.info("max "+max.get()+" user "+userWithCommonFilms.get());
-        List<Long> commonFilms = jdbcTemplate.query(sql, (rs, num) -> rs.getLong("id"), id, userWithCommonFilms.get());
-        log.info("common " + commonFilms);
-        String sqlQuery = "SELECT f.*, " +
-                "m.name as mpa_name, " +
-                "m.id as mpa_id, " +
-                "g.id as genre_id, " +
-                "g.name AS genre_name " +
-                "FROM films as f " +
-                "JOIN MPA_ratings as m ON f.mpa_id = m.id " +
-                "LEFT JOIN films_genres AS fg ON f.id = fg.film_id " +
-                "LEFT JOIN genres AS g ON fg.genre_id = g.id " +
-                "WHERE f.id IN (" +
-                "SELECT FILM_ID " +
-                "FROM films_likes " +
-                "WHERE user_id = ?)";
-        List<Film> filmsWithoutCommons = new ArrayList<>();
-        List<Film> otherUserFilms = jdbcTemplate.query(sqlQuery, new FilmMapper(), userWithCommonFilms.get());
-        otherUserFilms.forEach(film -> {
-            if(!commonFilms.contains(film.getId())) {
-                filmsWithoutCommons.add(film);
-            }
-        });
-        log.info("films with common "+otherUserFilms);
-        return filmsWithoutCommons;
+        List<Film> recommendations = new ArrayList<>();
+        String sqlQuery = "SELECT l2.user_id " +
+                "FROM films_likes AS l1 " +
+                "JOIN films_likes AS l2 " +
+                "ON l1.film_id = l2.film_id " +
+                "WHERE l1.user_id<>l2.user_id AND l1.user_id = ? " +
+                "GROUP BY l2.user_id " +
+                "ORDER BY COUNT(l2.user_id) DESC " +
+                "LIMIT 1";
+        List<Integer> userWithSameLikes = jdbcTemplate.queryForList(sqlQuery, Integer.class, id);
+        if (userWithSameLikes.size() != 1) {
+            return recommendations;
+        }
+        Integer userWithSameLikesId = userWithSameLikes.get(0);
+        if (userWithSameLikesId != null) {
+            String sqlQuery2 = "SELECT f.*, " +
+                    "m.name AS mpa_name, " +
+                    "m.id AS mpa_id, " +
+                    "g.id as genre_id, " +
+                    "g.name AS genre_name, " +
+                    "d.id as director_id, " +
+                    "d.name AS director_name " +
+                    "FROM FILMS AS f " +
+                    "JOIN MPA_ratings AS m ON f.MPA_ID = m.ID " +
+                    "LEFT JOIN films_genres AS fg ON f.id = fg.film_id " +
+                    "LEFT JOIN genres AS g ON fg.genre_id = g.id " +
+                    "LEFT JOIN films_directors AS fd ON f.id = fd.film_id " +
+                    "LEFT JOIN directors AS d ON fd.director_id = d.id " +
+                    "JOIN (SELECT fl.film_id FROM FILMS_LIKES AS fl WHERE user_id = ? " +
+                    "EXCEPT (SELECT fl.film_id FROM FILMS_LIKES AS fl  WHERE user_id = ?)) AS ex " +
+                    "ON f.id = ex.film_id";
+            recommendations = jdbcTemplate.query(sqlQuery2, new FilmMapper(), userWithSameLikesId, id);
+        }
+        return recommendations;
 
     }
 }
