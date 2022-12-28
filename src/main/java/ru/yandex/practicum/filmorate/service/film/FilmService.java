@@ -69,6 +69,14 @@ public interface FilmService {
     Film create(Film film);
 
     /**
+     * Удаление фильма
+     *
+     * @param id
+     * @return boolean
+     */
+    boolean remove(Long id);
+
+     /**
      * Возвращает список фильмов режиссера отсортированных
      * по количеству лайков или году выпуска
      *
@@ -77,4 +85,13 @@ public interface FilmService {
      * @return
      */
     List<Film> getFilmsByDirectors(String directorId, String sortBy);
+
+    /**
+     * Поиск по названию фильмов и по режиссёру
+     *
+     * @param query
+     * @param by
+     * @return List
+     */
+    List<Film> search(String query, String by);
 }

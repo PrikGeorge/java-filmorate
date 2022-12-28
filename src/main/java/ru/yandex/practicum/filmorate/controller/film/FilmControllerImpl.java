@@ -62,9 +62,19 @@ public class FilmControllerImpl implements FilmController {
     }
 
     @Override
+    public boolean remove(@PathVariable(value = "id") Long id) {
+        return service.remove(id);
+    }
+
+    @Override
     public List<Film> getFilmsByDirectors(@PathVariable String directorId,
                                           @RequestParam(required = false, defaultValue = "year") String sortBy) {
         return service.getFilmsByDirectors(directorId, sortBy);
+    }
+
+    @Override
+    public List<Film> search(@RequestParam() String query, @RequestParam() String by) {
+        return service.search(query, by);
     }
 
 }

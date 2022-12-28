@@ -75,8 +75,13 @@ public class FilmServiceImpl implements FilmService {
         if (Objects.nonNull(film.getId())) {
             validateFilmId(film.getId());
         }
-
         return storage.create(film);
+    }
+
+    @Override
+    public boolean remove(@NonNull Long id) {
+        validateFilmId(id);
+        return storage.remove(id);
     }
 
     private Film validateFilmId(Long id) {
@@ -95,6 +100,11 @@ public class FilmServiceImpl implements FilmService {
         }
 
         return films;
+    }
+
+    @Override
+    public List<Film> search(String query, String by) {
+        return storage.search(query, by);
     }
 
 }
